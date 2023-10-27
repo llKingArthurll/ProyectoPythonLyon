@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import Toplevel
+
 from miapp.config import screen_width, screen_height
+from miapp.pantalla_forms import PantallaForms
 from miapp.pantalla_formulario import PantallaFormulario
 
 class PantallaOpciones:
@@ -20,21 +22,24 @@ class PantallaOpciones:
 
         self.ingresar_nuevo_button = tk.Button(self.root, text="Ingresar nuevo", command=self.ingresar_nuevo)
         self.ingresar_nuevo_button.pack(pady=10)
+        
+        self.continuar_button = tk.Button(self.root, text="Continuar", command=self.continuar)
+        self.continuar_button.pack(pady=10)
 
     def ver_archivos(self):
         # Agregar lógica para ver archivos o navegar a la pantalla correspondiente aquí
         pass
-
-    # def ingresar_nuevo(self):
-    #     self.root.withdraw()
-    #     formulario_window = Toplevel(self.root)
-    #     formulario = PantallaFormulario(formulario_window)
     
     def ingresar_nuevo(self):
-        self.root.iconify()  # Minimiza la ventana actual (pantalla de opciones)
-        formulario_window = tk.Toplevel()  # Crea una nueva ventana superior
-        formulario_window.geometry("800x600")
+        self.root.withdraw()
+        formulario_window = tk.Tk()
         pantalla_formulario = PantallaFormulario(formulario_window)
-        pantalla_formulario.previous_window = self.root  # Guarda la referencia a la ventana anterior
+        pantalla_formulario.previous_window = self.root
         formulario_window.mainloop()
-
+        
+    def continuar(self):
+        self.root.withdraw()
+        formulario_window = tk.Tk()
+        pantalla_formulario = PantallaForms(formulario_window)
+        pantalla_formulario.previous_window = self.root
+        formulario_window.mainloop()
