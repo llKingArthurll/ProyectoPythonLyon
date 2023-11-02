@@ -24,7 +24,7 @@ class PantallaFormulario:
         frame3 = tk.Frame(container)
         frame4 = tk.Frame(container)
         frame5 = tk.Frame(container)
-        frame6 = tk.Frame(container)  # Nuevo frame para el segundo archivo
+        frame6 = tk.Frame(container)
 
         label1 = tk.Label(frame1, text="N° de guía:", width=20, anchor="e")
         label1.pack(side="left", padx=5)
@@ -115,7 +115,6 @@ class PantallaFormulario:
 
     def continue_form(self):
         cantidad_productos = self.entry4.get().strip()
-        # Abrir pantalla agregar productos
         agregar_productos_window = tk.Toplevel(self.root)
         agregar_productos_screen = PantallaAgregarProductos(agregar_productos_window, cantidad_productos)
         

@@ -40,30 +40,29 @@ class PantallaAgregarProductos:
         title_label.pack(fill="x", padx=10, pady=(10, 0))
 
         for i in range(1, int(self.cantidad_productos) + 1):
-            # En lugar de agregar a self.root, agregamos al frame interior (frame)
-            frame_product = tk.Frame(self.frame, padx=10, pady=10)  # Agregar espacio alrededor
+            frame_product = tk.Frame(self.frame, padx=10, pady=10)
             frame_product.pack(anchor="w", pady=(0, 10))
 
             label1 = tk.Label(frame_product, text=f"Producto {i}:", anchor="e")
             label1.grid(row=0, column=0, sticky="w")
 
             label2 = tk.Label(frame_product, text="Nombre del producto:", anchor="e")
-            label2.grid(row=1, column=0, sticky="w", padx=(50, 5), pady=(5, 5))  # Espacio a la izquierda y arriba/abajo
+            label2.grid(row=1, column=0, sticky="w", padx=(50, 5), pady=(5, 5))
 
             entry2 = tk.Entry(frame_product, width=40)
-            entry2.grid(row=1, column=1, padx=(5, 10), pady=(5, 5))  # Espacio a la derecha y arriba/abajo
+            entry2.grid(row=1, column=1, padx=(5, 10), pady=(5, 5))
 
             label3 = tk.Label(frame_product, text="Descripción del producto:", anchor="e")
-            label3.grid(row=2, column=0, sticky="w", padx=(50, 5), pady=(5, 5))  # Espacio a la izquierda y arriba/abajo
+            label3.grid(row=2, column=0, sticky="w", padx=(50, 5), pady=(5, 5))
 
             entry3 = tk.Entry(frame_product, width=40)
-            entry3.grid(row=2, column=1, padx=(5, 10), pady=(5, 5))  # Espacio a la derecha y arriba/abajo
+            entry3.grid(row=2, column=1, padx=(5, 10), pady=(5, 5))  
 
             label4 = tk.Label(frame_product, text="Series:", anchor="e")
-            label4.grid(row=3, column=0, sticky="w", padx=(50, 5), pady=(5, 5))  # Espacio a la izquierda y arriba/abajo
+            label4.grid(row=3, column=0, sticky="w", padx=(50, 5), pady=(5, 5))
 
             entry4 = tk.Entry(frame_product, width=40)
-            entry4.grid(row=3, column=1, padx=(5, 10), pady=(5, 5))  # Espacio a la derecha y arriba/abajo
+            entry4.grid(row=3, column=1, padx=(5, 10), pady=(5, 5))  
 
         # Botones Cancelar y Guardar
         button_frame = tk.Frame(self.frame)
@@ -82,9 +81,9 @@ class PantallaAgregarProductos:
         print(f"Cantidad de productos: {self.cantidad_productos}")
 
         for i in range(1, int(self.cantidad_productos) + 1):
-            nombre_producto = self.frame.winfo_children()[i].winfo_children()[4].get()  # Usar el índice correcto (4)
-            descripcion_producto = self.frame.winfo_children()[i].winfo_children()[7].get()  # Usar el índice correcto (7)
-            series = self.frame.winfo_children()[i].winfo_children()[10].get()  # Usar el índice correcto (10)
+            nombre_producto = self.frame.winfo_children()[i].winfo_children()[4].get()
+            descripcion_producto = self.frame.winfo_children()[i].winfo_children()[7].get()
+            series = self.frame.winfo_children()[i].winfo_children()[10].get()
 
             print(f"Producto {i}:")
             print(f"Nombre del producto: {nombre_producto}")
