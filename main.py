@@ -1,7 +1,9 @@
 from miapp.pantalla_bienvenida import PantallaBienvenida
+import tkinter as tk
 
 def main():
-    pantalla_inicio = PantallaBienvenida()
+    root = tk.Tk()
+    pantalla_inicio = PantallaBienvenida(root)
     pantalla_inicio.mostrar_bienvenida()
 
 if __name__ == "__main__":
