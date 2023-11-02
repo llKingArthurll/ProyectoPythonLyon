@@ -3,30 +3,35 @@ import tkinter as tk
 class PantallaForms:
     def __init__(self, root):
         self.root = root
-        self.root.title("Ingresar Nuevo")
+        self.root.title("Ingrese nueva guía")
 
-        frame = tk.Frame(self.root)
-        frame.pack(padx=20, pady=20)
+        # Crear un Frame para organizar los elementos en tres columnas
+        self.column1 = tk.Frame(self.root)
+        self.column1.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        self.column2 = tk.Frame(self.root)
+        self.column2.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+        self.column3 = tk.Frame(self.root)
+        self.column3.grid(row=1, column=2, padx=10, pady=10, sticky="w")
 
-        label = tk.Label(frame, text="Ingresa un valor:")
-        label.grid(row=0, column=0, padx=10, pady=5)
+        # Título
+        self.label_title = tk.Label(self.root, text="Ingrese nueva guía", font=("Helvetica", 16))
+        self.label_title.grid(row=0, columnspan=3, pady=10)
 
-        self.valor = tk.StringVar()
-        self.entry = tk.Entry(frame, textvariable=self.valor)
-        self.entry.grid(row=0, column=1, padx=10, pady=5)
+        # Labels y campos de entrada
+        self.create_label_entry(self.column1, "Campo 1:")
+        self.create_label_entry(self.column1, "Campo 2:")
 
-        cancel_button = tk.Button(frame, text="Cancelar", command=self.cancel)
-        cancel_button.grid(row=1, column=0, padx=10, pady=5)
+        self.create_label_entry(self.column1, "Campo 3:")
+        self.create_label_entry(self.column1, "Campo 4:")
 
-        continue_button = tk.Button(frame, text="Continuar", command=self.continue_form)
-        continue_button.grid(row=1, column=1, padx=10, pady=5)
+        self.create_label_entry(self.column2, "Campo 5:")
+        self.create_label_entry(self.column2, "Campo 6:")
 
-    def cancel(self):
-        self.root.destroy()
-
-    def continue_form(self):
-        valor_ingresado = self.entry.get()
-        print(f"Valor ingresado en continue_form: {valor_ingresado}")
+    def create_label_entry(self, frame, label_text):
+        label = tk.Label(frame, text=label_text)
+        entry = tk.Entry(frame)
+        label.grid(sticky="w")
+        entry.grid(sticky="w")
 
 if __name__ == "__main__":
     root = tk.Tk()
