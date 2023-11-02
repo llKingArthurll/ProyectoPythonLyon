@@ -32,9 +32,8 @@ class PantallaBienvenida:
     def mostrar_opciones(self):
         opciones_window = tk.Toplevel(self.root)
         opciones = PantallaOpciones(opciones_window)
-        self.root.withdraw()
-
+        
 if __name__ == "__main__":
     root = tk.Tk()
-    pantalla_inicio = PantallaBienvenida(root)
-    pantalla_inicio.mostrar_bienvenida()
+    app = PantallaBienvenida(root)
+    root.mainloop()

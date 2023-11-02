@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import Toplevel
 from tkinter import PhotoImage
 from miapp.config import screen_width, screen_height
-from miapp.pantalla_forms import PantallaForms
 from miapp.pantalla_formulario import PantallaFormulario
 
 import tkinter as tk
@@ -30,9 +29,6 @@ class PantallaOpciones:
         self.label.place(relx=0.6, rely=0.35)
         self.ingresar_nuevo_button = tk.Button(self.root, text="Ingresar nuevo", command=self.ingresar_nuevo, bg="#FE6E0C", fg="white", bd=1, height=3, width=20)
         self.ingresar_nuevo_button.place(relx=0.6, rely=0.40)
-        
-        self.continuar_button = tk.Button(self.root, text="Continuar", command=self.continuar)
-        self.continuar_button.place(relx=0.5, rely=0.6)
 
     def ver_archivos(self):
         # Agregar lógica para ver archivos o navegar a la pantalla correspondiente aquí
@@ -44,10 +40,8 @@ class PantallaOpciones:
         pantalla_formulario = PantallaFormulario(formulario_window)
         pantalla_formulario.previous_window = self.root
         formulario_window.mainloop()
-        
-    def continuar(self):
-        self.root.withdraw()
-        formulario_window = tk.Tk()
-        pantalla_formulario = PantallaForms(formulario_window)
-        pantalla_formulario.previous_window = self.root
-        formulario_window.mainloop()
+    
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = PantallaOpciones(root)
+    root.mainloop()
