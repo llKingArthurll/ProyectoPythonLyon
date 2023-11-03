@@ -4,7 +4,6 @@ import os
 from tkinter import filedialog
 from tkcalendar import DateEntry
 from miapp.config import screen_width, screen_height
-from miapp.pantalla_resumen import PantallaResumen
 from miapp.pantalla_agregar_productos import PantallaAgregarProductos
 
 class PantallaFormulario:
