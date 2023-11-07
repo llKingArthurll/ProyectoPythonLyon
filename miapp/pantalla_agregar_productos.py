@@ -1,11 +1,17 @@
+import datetime
 import tkinter as tk
 
 class PantallaAgregarProductos:
-    def __init__(self, root, cantidad_productos):
+    def __init__(self, root, guia_numero, nombre_empresa, fecha, cantidad_productos, primer_archivo, segundo_archivo):
         self.root = root
         self.root.title("Agregar Productos")
         self.root.geometry("600x500")
+        self.guia_numero = guia_numero
+        self.nombre_empresa = nombre_empresa
+        self.fecha = fecha
         self.cantidad_productos = cantidad_productos
+        self.primer_archivo = primer_archivo
+        self.segundo_archivo = segundo_archivo
         self.productos = []
 
         self.canvas = tk.Canvas(self.root)
@@ -76,27 +82,22 @@ class PantallaAgregarProductos:
         self.root.destroy()
 
     def save(self):
-        print(f"Cantidad de productos: {self.cantidad_productos}")
+        print(f"Número de Guía: {self.guia_numero}")
+        print(f"Nombre de la Empresa: {self.nombre_empresa}")
+        print(f"Fecha: {self.fecha}")
+        print(f"Cantidad de Productos: {self.cantidad_productos}")
+        print(f"Primer Archivo PDF: {self.primer_archivo}")
+        print(f"Segundo Archivo PDF: {self.segundo_archivo}")
 
-        for i, (entry2, entry3, entry4) in enumerate(self.productos, start=1):
-            nombre_producto = entry2.get()
-            descripcion_producto = entry3.get()
-            series = entry4.get()
-
-            print(f"Producto {i}:")
-            print(f"Nombre del producto: {nombre_producto}")
-            print(f"Descripción del producto: {descripcion_producto}")
-            print(f"Series: {series}")
-
-        # Imprime el contenido del array
-        print("Contenido del array self.productos:")
+        # Imprime el contenido de la lista de productos
+        print("Contenido de la lista de productos:")
         for i, producto in enumerate(self.productos, start=1):
             print(f"--- Producto {i} ---")
             print(f"Nombre del producto: {producto[0].get()}")
             print(f"Descripción del producto: {producto[1].get()}")
             print(f"Series: {producto[2].get()}")
-
+    
 if __name__ == "__main__":
     root = tk.Tk()
-    app = PantallaAgregarProductos(root, 10)
+    app = PantallaAgregarProductos(root)
     root.mainloop()

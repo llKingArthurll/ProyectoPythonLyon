@@ -1,7 +1,7 @@
 import tkinter as tk
 import os
-
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
+from datetime import datetime
 from tkcalendar import DateEntry
 from miapp.config import screen_width, screen_height
 from miapp.pantalla_agregar_productos import PantallaAgregarProductos
@@ -36,27 +36,28 @@ class PantallaFormulario:
         label2 = tk.Label(frame2, text="Nombre de la empresa:", width=20, anchor="e")
         label2.pack(side="left", padx=5)
         def validate_empresa_input(P):
-            return len(P) <= 50 and P.isalpha()
+            return len(P) <= 50
         validation_empresa = root.register(validate_empresa_input)
         self.entry2 = tk.Entry(frame2, validate="key", validatecommand=(validation_empresa, "%P"), width=25)
         self.entry2.pack(side="left")
 
-        label3 = tk.Label(frame3, text="Fecha:", width=20, anchor="e")
-        label3.pack(side="left", padx=5)
-        self.fecha_var = tk.StringVar()
+        label4 = tk.Label(frame3, text="Fecha:", width=20, anchor="e")
+        label4.pack(side="left", padx=5)
+        fecha_actual = datetime.now().strftime("%d/%m/%Y")
+        self.fecha_var = tk.StringVar(value=fecha_actual)
         date_picker = DateEntry(frame3, textvariable=self.fecha_var, date_pattern="dd/mm/yyyy")
         date_picker.pack(side="left")
 
-        label4 = tk.Label(frame4, text="Cantidad de productos:", width=20, anchor="e")
-        label4.pack(side="left", padx=5)
+        label5 = tk.Label(frame4, text="Cantidad de productos:", width=20, anchor="e")
+        label5.pack(side="left", padx=5)
         def validate_cantidad_productos_input(P):
             return len(P) <= 2 and P.isdigit()
         validation_cantidad = root.register(validate_cantidad_productos_input)
         self.entry4 = tk.Entry(frame4, validate="key", validatecommand=(validation_cantidad, "%P"), width=25)
         self.entry4.pack(side="left")
 
-        label5 = tk.Label(frame5, text="Subir guía:", width=20, anchor="e")
-        label5.pack(side="left", padx=5)
+        label6 = tk.Label(frame5, text="Subir guía:", width=20, anchor="e")
+        label6.pack(side="left", padx=5)
         upload_button = tk.Button(frame5, text="Subir archivo", command=self.upload_file)
         upload_button.pack(side="left")
 
@@ -64,8 +65,8 @@ class PantallaFormulario:
         self.file_label = tk.Label(frame5, textvariable=self.file_name, wraplength=200)
         self.file_label.pack(side="left")
 
-        label6 = tk.Label(frame6, text="Subir factura:", width=20, anchor="e")
-        label6.pack(side="left", padx=5)
+        label7 = tk.Label(frame6, text="Subir factura:", width=20, anchor="e")
+        label7.pack(side="left", padx=5)
         upload_button2 = tk.Button(frame6, text="Subir archivo", command=self.upload_file2)
         upload_button2.pack(side="left")
 
@@ -107,16 +108,22 @@ class PantallaFormulario:
                 self.file_name2.set(f"Segundo archivo seleccionado: {file_name}")
             else:
                 self.file_name2.set("Por favor, seleccione un archivo PDF válido")
-
+    
     def cancel(self):
         self.root.destroy()
         self.previous_window.deiconify()
 
     def continue_form(self):
+        numero_guia = self.entry1.get()
+        nombre_empresa = self.entry2.get()
         cantidad_productos = self.entry4.get().strip()
-        agregar_productos_window = tk.Toplevel(self.root)
-        agregar_productos_screen = PantallaAgregarProductos(agregar_productos_window, cantidad_productos)
-        
+        fecha = self.fecha_var.get()
+        if cantidad_productos.isnumeric() and int(cantidad_productos) > 0:
+            agregar_productos_window = tk.Toplevel(self.root)
+            agregar_productos_screen = PantallaAgregarProductos(agregar_productos_window, numero_guia, nombre_empresa, fecha, cantidad_productos, self.file_name.get(), self.file_name2.get())
+        else:
+            messagebox.showerror("Error", "Por favor, ingrese una cantidad de productos válida (mayor a 0).")
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = PantallaFormulario(root)

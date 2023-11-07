@@ -6,7 +6,7 @@ from miapp.config import screen_width, screen_height
 class PantallaBienvenida:
     def __init__(self, root):
         self.root = root
-        self.root.title("LYON  SYSTEM")
+        self.root.title("LYON SYSTEM")
         self.root.geometry(f"{screen_width}x{screen_height}")
 
         self.root.iconbitmap("resources/images/LogoLYON.ico")
@@ -25,10 +25,11 @@ class PantallaBienvenida:
         self.root.mainloop()
 
     def mostrar_opciones(self):
-        opciones_window = tk.Toplevel(self.root)
-        opciones = PantallaOpciones(opciones_window)
+        self.opciones_window = tk.Toplevel(self.root)
+        opciones = PantallaOpciones(self.opciones_window)
+        self.root.withdraw()
         
 if __name__ == "__main__":
     root = tk.Tk()
     app = PantallaBienvenida(root)
-    root.mainloop()
+    app.mostrar_bienvenida()
