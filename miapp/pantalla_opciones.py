@@ -34,8 +34,7 @@ class PantallaOpciones:
     def ingresar_nuevo(self):
         self.root.withdraw()
         formulario_window = tk.Tk()
-        pantalla_formulario = PantallaFormulario(formulario_window)
-        pantalla_formulario.previous_window = self.root
+        pantalla_formulario = PantallaFormulario(formulario_window, self)
         formulario_window.mainloop()
     
 if __name__ == "__main__":
