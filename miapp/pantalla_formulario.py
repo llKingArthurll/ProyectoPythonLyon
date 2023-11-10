@@ -7,14 +7,15 @@ from miapp.config import screen_width, screen_height
 from miapp.pantalla_agregar_productos import PantallaAgregarProductos
 
 class PantallaFormulario:
-    def __init__(self, root):
+    def __init__(self, root, pantalla_opciones):
         self.root = root
+        self.pantalla_opciones = pantalla_opciones
         self.root.title("Ingresar Nuevo")
         self.root.geometry(f"{screen_width}x{screen_height}")
         
         self.label = tk.Label(self.root, text="Registrar Nueva Guía", font=("Helvetica", 25))
         self.label.pack(pady=25)
-
+        
         container = tk.Frame(self.root, padx=250)
         container.pack(expand=True, fill="both")
         
@@ -32,6 +33,7 @@ class PantallaFormulario:
         validation_guia = root.register(validate_guia_input)
         self.entry1 = tk.Entry(frame1, validate="key", validatecommand=(validation_guia, "%P"), width=25)
         self.entry1.pack(side="left")
+        self.entry1.focus_set()
 
         label2 = tk.Label(frame2, text="Nombre de la empresa:", width=20, anchor="e")
         label2.pack(side="left", padx=5)
@@ -45,8 +47,9 @@ class PantallaFormulario:
         label4.pack(side="left", padx=5)
         fecha_actual = datetime.now().strftime("%d/%m/%Y")
         self.fecha_var = tk.StringVar(value=fecha_actual)
-        date_picker = DateEntry(frame3, textvariable=self.fecha_var, date_pattern="dd/mm/yyyy")
-        date_picker.pack(side="left")
+        self.date_picker = DateEntry(frame3, textvariable=self.fecha_var, date_pattern="dd/mm/yyyy")
+        self.date_picker.pack(side="left")
+        self.date_picker.bind("<<DateEntrySelected>>", self.date_changed)
 
         label5 = tk.Label(frame4, text="Cantidad de productos:", width=20, anchor="e")
         label5.pack(side="left", padx=5)
@@ -91,36 +94,53 @@ class PantallaFormulario:
         continue_button = tk.Button(button_frame, text="Continuar", command=self.continue_form)
         continue_button.pack(side="right", padx=50)
 
+    def date_changed(self, event):
+        date = self.date_picker.get_date()
+        fecha_formato_deseado = date.strftime("%d/%m/%Y")
+        self.fecha_var.set(fecha_formato_deseado)
+
     def upload_file(self):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
         if file_path:
             if file_path.lower().endswith(".pdf"):
                 file_name = os.path.basename(file_path)
-                self.file_name.set(f"Archivo seleccionado: {file_name}")
-            else:
-                self.file_name.set("Por favor, seleccione un archivo PDF válido")
+                self.file_name.set(file_name)
+                if self.file_label:
+                    self.file_label.destroy()
+                self.file_label = tk.Label(self.root, text=f"Nombre de la guía: {file_name}")
+                self.file_label.pack()
+
 
     def upload_file2(self):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
         if file_path:
             if file_path.lower().endswith(".pdf"):
                 file_name = os.path.basename(file_path)
-                self.file_name2.set(f"Segundo archivo seleccionado: {file_name}")
-            else:
-                self.file_name2.set("Por favor, seleccione un archivo PDF válido")
-    
+                self.file_name2.set(file_name)
+                if self.file_label2:
+                    self.file_label2.destroy()
+                self.file_label2 = tk.Label(self.root, text=f"Nombre de la factura: {file_name}")
+                self.file_label2.pack()
+
     def cancel(self):
         self.root.destroy()
-        self.previous_window.deiconify()
+        self.pantalla_opciones.root.deiconify()
 
     def continue_form(self):
         numero_guia = self.entry1.get()
         nombre_empresa = self.entry2.get()
         cantidad_productos = self.entry4.get().strip()
         fecha = self.fecha_var.get()
-        if cantidad_productos.isnumeric() and int(cantidad_productos) > 0:
+        
+        # Verificar que se hayan subido los dos archivos
+        if not (self.file_name.get() and self.file_name2.get()):
+            messagebox.showerror("Error", "Por favor, suba tanto la guía como la factura.")
+        elif not (numero_guia and nombre_empresa and cantidad_productos and fecha):
+            messagebox.showerror("Error", "Por favor, complete todos los campos.")
+        elif cantidad_productos.isnumeric() and int(cantidad_productos) > 0:
+            self.root.withdraw()  # Oculta la ventana actual
             agregar_productos_window = tk.Toplevel(self.root)
-            agregar_productos_screen = PantallaAgregarProductos(agregar_productos_window, numero_guia, nombre_empresa, fecha, cantidad_productos, self.file_name.get(), self.file_name2.get())
+            agregar_productos_screen = PantallaAgregarProductos(agregar_productos_window, numero_guia, nombre_empresa, fecha, cantidad_productos, self.file_name.get(), self.file_name2.get(), self)
         else:
             messagebox.showerror("Error", "Por favor, ingrese una cantidad de productos válida (mayor a 0).")
 
