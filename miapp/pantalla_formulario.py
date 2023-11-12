@@ -66,7 +66,7 @@ class PantallaFormulario:
 
         self.file_name = tk.StringVar()
         self.file_label = tk.Label(frame5, textvariable=self.file_name, wraplength=200)
-        self.file_label.pack(side="left")
+        self.file_label.pack(side="left", pady=(5, 0))
 
         label7 = tk.Label(frame6, text="Subir factura:", width=20, anchor="e")
         label7.pack(side="left", padx=5)
@@ -75,7 +75,7 @@ class PantallaFormulario:
 
         self.file_name2 = tk.StringVar()
         self.file_label2 = tk.Label(frame6, textvariable=self.file_name2, wraplength=200)
-        self.file_label2.pack(side="left")
+        self.file_label2.pack(side="left", pady=(5, 0))
 
         frame1.grid(row=0, column=0, padx=10, pady=(screen_height - 600) // 2, sticky="nsew")
         frame2.grid(row=0, column=1, padx=10, pady=(screen_height - 600) // 2, sticky="nsew")
@@ -83,6 +83,13 @@ class PantallaFormulario:
         frame4.grid(row=1, column=0, padx=10, pady=(screen_height - 600) // 2, sticky="nsew")
         frame5.grid(row=1, column=1, padx=10, pady=(screen_height - 600) // 2, sticky="nsew")
         frame6.grid(row=1, column=2, padx=10, pady=(screen_height - 600) // 2, sticky="nsew")
+
+        # Nuevas filas para mostrar nombres de archivos
+        self.file_label_guia = tk.Label(container, text="", wraplength=200)
+        self.file_label_guia.grid(row=2, column=0, columnspan=2, pady=(5, 0))
+        
+        self.file_label_factura = tk.Label(container, text="", wraplength=200)
+        self.file_label_factura.grid(row=2, column=1, columnspan=2, pady=(5, 0))
 
         container.grid_columnconfigure(0, weight=1)
         container.grid_columnconfigure(1, weight=1)
@@ -104,23 +111,16 @@ class PantallaFormulario:
         if file_path:
             if file_path.lower().endswith(".pdf"):
                 file_name = os.path.basename(file_path)
-                self.file_name.set(file_name)
-                if self.file_label:
-                    self.file_label.destroy()
-                self.file_label = tk.Label(self.root, text=f"Nombre de la guía: {file_name}")
-                self.file_label.pack()
-
+                self.file_name.set(f"Nombre de la guía: {file_name}")
+                self.file_label_guia.config(text=f"Nombre de la guía: {file_name}")
 
     def upload_file2(self):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
         if file_path:
             if file_path.lower().endswith(".pdf"):
                 file_name = os.path.basename(file_path)
-                self.file_name2.set(file_name)
-                if self.file_label2:
-                    self.file_label2.destroy()
-                self.file_label2 = tk.Label(self.root, text=f"Nombre de la factura: {file_name}")
-                self.file_label2.pack()
+                self.file_name2.set(f"Nombre de la factura: {file_name}")
+                self.file_label_factura.config(text=f"Nombre de la factura: {file_name}")
 
     def cancel(self):
         self.root.destroy()
