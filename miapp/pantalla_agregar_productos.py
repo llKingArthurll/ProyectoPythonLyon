@@ -1,13 +1,16 @@
 import tkinter as tk
 from miapp.pantalla_agregar_serie import PantallaAgregarSerie
+
 class PantallaAgregarProductos:
     def __init__(self, root, numero_guia, nombre_empresa, fecha, cantidad_productos, file_name1, file_name2, pantalla_formulario):
         self.root = root
         self.pantalla_formulario = pantalla_formulario
         self.cantidad_productos = cantidad_productos
         self.productos = []
+        self.entry_series_dict = {}
+        self.pantalla_agregar_serie_window = None  # Nueva propiedad
         self.root.title("Agregar Productos")
-        self.root.geometry("600x500")
+        self.root.geometry("615x500")
 
         self.canvas = tk.Canvas(self.root)
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -57,27 +60,38 @@ class PantallaAgregarProductos:
             label4 = tk.Label(frame_product, text="Series:", anchor="e")
             label4.grid(row=3, column=0, sticky="w", padx=(50, 5), pady=(5, 5))
 
-            entry4 = tk.Entry(frame_product, width=40, state="readonly")
-            entry4.grid(row=3, column=1, padx=(5, 10), pady=(5, 5))
-            entry4.insert(0, "Ingrese series")
+            entry_series = tk.Entry(frame_product, width=40, state="readonly")
+            entry_series.grid(row=3, column=1, padx=(5, 10), pady=(5, 5))
+            entry_series.insert(0, "Ingrese series")
 
-            button_agregar_serie = tk.Button(frame_product, text="Agregar Serie", command=lambda i=i: self.abrir_pantalla_agregar_serie(entry4))
-            button_agregar_serie.grid(row=3, column=2, padx=(5, 10), pady=(5, 5))
+            button_agregar_serie = tk.Button(frame_product, text="Agregar Serie", command=lambda i=i, entry_series=entry_series: self.abrir_pantalla_agregar_serie(entry_series), width=14)
+            button_agregar_serie.grid(row=2, column=2, padx=(5, 10), pady=(5, 5))
 
-            self.productos.append((entry2, entry3, entry4))
+            button_reestablecer_serie = tk.Button(frame_product, text="Reestablecer Serie", command=lambda entry_series=entry_series: self.reestablecer_serie(entry_series), width=14)
+            button_reestablecer_serie.grid(row=3, column=2, padx=(5, 10), pady=(5, 5))
+
+            self.entry_series_dict[i] = entry_series
+            self.productos.append((entry2, entry3, entry_series))
 
         button_frame = tk.Frame(self.frame)
         button_frame.pack(fill="x", padx=10, pady=(20, 10), anchor="e")
 
-        cancel_button = tk.Button(button_frame, text="Cancelar", command=self.cancel)
+        cancel_button = tk.Button(button_frame, text="Cancelar", command=self.cancel, width=10)
         cancel_button.pack(side="left", padx=10)
 
-        save_button = tk.Button(button_frame, text="Guardar", command=self.save)
+        save_button = tk.Button(button_frame, text="Guardar", command=self.save, width=10)
         save_button.pack(side="right", padx=10)
 
     def abrir_pantalla_agregar_serie(self, entry_series):
-        pantalla_agregar_serie_window = tk.Toplevel(self.root)
-        pantalla_agregar_serie = PantallaAgregarSerie(pantalla_agregar_serie_window, entry_series, self)
+        if not self.pantalla_agregar_serie_window or not self.pantalla_agregar_serie_window.winfo_exists():
+            self.pantalla_agregar_serie_window = tk.Toplevel(self.root)
+            pantalla_agregar_serie = PantallaAgregarSerie(self.pantalla_agregar_serie_window, entry_series, self)
+
+    def reestablecer_serie(self, entry_series):
+        entry_series.config(state="normal")
+        entry_series.delete(0, tk.END)
+        entry_series.insert(0, "")
+        entry_series.config(state="readonly")
 
     def cancel(self):
         self.root.destroy()
@@ -90,9 +104,9 @@ class PantallaAgregarProductos:
             print(f"--- Producto {i} ---")
             print(f"Nombre del producto: {producto[0].get()}")
             print(f"Descripción del producto: {producto[1].get()}")
-            print(f"Serie: {producto[2].get()}")
+            print(f"Series: {producto[2].get()}")
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = PantallaAgregarProductos(root, None)
+    app = PantallaAgregarProductos(root)
     root.mainloop()
