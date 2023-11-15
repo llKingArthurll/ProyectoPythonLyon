@@ -1,14 +1,21 @@
 import tkinter as tk
+from tkinter import ttk, messagebox
 from miapp.pantalla_agregar_serie import PantallaAgregarSerie
+from miapp.pantalla_resumen import PantallaResumen
 
 class PantallaAgregarProductos:
     def __init__(self, root, numero_guia, nombre_empresa, fecha, cantidad_productos, file_name1, file_name2, pantalla_formulario):
         self.root = root
         self.pantalla_formulario = pantalla_formulario
+        self.numero_guia = numero_guia
+        self.nombre_empresa = nombre_empresa
+        self.fecha = fecha
         self.cantidad_productos = cantidad_productos
+        self.file_name1 = file_name1
+        self.file_name2 = file_name2
         self.productos = []
         self.entry_series_dict = {}
-        self.pantalla_agregar_serie_window = None  # Nueva propiedad
+        self.pantalla_agregar_serie_window = None
         self.root.title("Agregar Productos")
         self.root.geometry("615x500")
 
@@ -94,19 +101,35 @@ class PantallaAgregarProductos:
         entry_series.config(state="readonly")
 
     def cancel(self):
-        self.root.destroy()
+        self.root.withdraw()
         self.pantalla_formulario.root.deiconify()
 
     def save(self):
-        # Aquí puedes incluir la lógica para guardar los productos
-        print("Productos guardados:")
+        # Obtiene los valores de los productos guardados
+        productos_guardados = []
         for i, producto in enumerate(self.productos, start=1):
-            print(f"--- Producto {i} ---")
-            print(f"Nombre del producto: {producto[0].get()}")
-            print(f"Descripción del producto: {producto[1].get()}")
-            print(f"Series: {producto[2].get()}")
+            nombre_producto = producto[0].get()
+            descripcion_producto = producto[1].get()
+            series_producto = producto[2].get()
+            productos_guardados.append((nombre_producto, descripcion_producto, series_producto))
+
+        # Oculta la ventana actual
+        self.root.withdraw()
+
+        # Abre la pantalla de resumen y pasa todas las variables
+        pantalla_resumen_window = tk.Toplevel(self.pantalla_formulario.root)
+        pantalla_resumen = PantallaResumen(
+            pantalla_resumen_window,
+            self.numero_guia,
+            self.nombre_empresa,
+            self.fecha,
+            self.cantidad_productos,
+            self.file_name1,
+            self.file_name2,
+            productos_guardados
+        )
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = PantallaAgregarProductos(root)
+    app = PantallaAgregarProductos(root, "123", "Empresa X", "01/01/2023", "2", "guia.pdf", "factura.pdf", None)
     root.mainloop()
