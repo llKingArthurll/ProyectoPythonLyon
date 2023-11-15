@@ -12,8 +12,9 @@ class PantallaFormulario:
         self.pantalla_opciones = pantalla_opciones
         self.root.title("Ingresar Nuevo")
         self.root.geometry(f"{screen_width}x{screen_height}")
+        self.root.iconbitmap("resources/images/LogoLYON.ico")
         
-        self.label = tk.Label(self.root, text="Registrar Nueva Guía", font=("Helvetica", 25))
+        self.label = tk.Label(self.root, text="REGISTRAR NUEVA GUÍA", font=("Helvetica", 25))
         self.label.pack(pady=25)
         
         container = tk.Frame(self.root, padx=250)
@@ -21,13 +22,13 @@ class PantallaFormulario:
         
         frame1 = tk.Frame(container)
         frame2 = tk.Frame(container)
-        frame3 = tk.Frame(container)
+        frame3 = tk.Frame(container) 
         frame4 = tk.Frame(container)
         frame5 = tk.Frame(container)
         frame6 = tk.Frame(container)
 
         label1 = tk.Label(frame1, text="N° de guía:", width=20, anchor="e")
-        label1.pack(side="left", padx=5)
+        label1.pack(side="left", padx=5,)
         def validate_guia_input(P):
             return len(P) <= 40 and P.isalnum()
         validation_guia = root.register(validate_guia_input)
@@ -61,7 +62,7 @@ class PantallaFormulario:
 
         label6 = tk.Label(frame5, text="Subir guía:", width=20, anchor="e")
         label6.pack(side="left", padx=5)
-        upload_button = tk.Button(frame5, text="Subir archivo", command=self.upload_file)
+        upload_button = tk.Button(frame5, text="Subir archivo", command=self.upload_file, bg="#353D87", fg="white" )
         upload_button.pack(side="left")
 
         self.file_name = tk.StringVar()
@@ -70,7 +71,7 @@ class PantallaFormulario:
 
         label7 = tk.Label(frame6, text="Subir factura:", width=20, anchor="e")
         label7.pack(side="left", padx=5)
-        upload_button2 = tk.Button(frame6, text="Subir archivo", command=self.upload_file2)
+        upload_button2 = tk.Button(frame6, text="Subir archivo", command=self.upload_file2, bg="#353D87", fg="white")
         upload_button2.pack(side="left")
 
         self.file_name2 = tk.StringVar()
@@ -96,9 +97,9 @@ class PantallaFormulario:
 
         button_frame = tk.Frame(self.root)
         button_frame.pack(side="bottom", padx=10, pady=(10, 100))
-        cancel_button = tk.Button(button_frame, text="Cancelar", command=self.cancel)
+        cancel_button = tk.Button(button_frame, text="Cancelar", command=self.cancel, bg="#FE6E0C", fg="white", bd=1, height=3, width=20)
         cancel_button.pack(side="left", padx=50)
-        continue_button = tk.Button(button_frame, text="Continuar", command=self.continue_form)
+        continue_button = tk.Button(button_frame, text="Continuar", command=self.continue_form, bg="#FE6E0C", fg="white", bd=1, height=3, width=20)
         continue_button.pack(side="right", padx=50)
 
     def date_changed(self, event):

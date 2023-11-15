@@ -10,6 +10,8 @@ class PantallaOpciones:
         self.root = root
         self.root.title("LYON  SYSTEM")
         self.root.geometry(f"{screen_width}x{screen_height}")
+        self.root.iconbitmap("resources/images/LogoLYON.ico")
+        
 
         self.label = tk.Label(self.root, text="¿QUÉ ACCIÓN DESEA REALIZAR?", font=("inter", 25))
         self.label.pack(pady=25)
