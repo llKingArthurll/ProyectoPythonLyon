@@ -61,19 +61,19 @@ class PantallaResumen:
         inner_frame = ttk.Frame(canvas)
         canvas.create_window((0, 0), window=inner_frame, anchor="nw")
 
-        ancho_label = 75
+        ancho_label = 72  # Ajusta el ancho deseado
 
         for i, producto in enumerate(self.productos_guardados, start=1):
-            producto_label = ttk.Label(inner_frame, text=f"--- Producto {i} ---", anchor="center", width=ancho_label)
+            producto_label = ttk.Label(inner_frame, text=f"--- Producto {i} ---", width=ancho_label, anchor="center")
             producto_label.pack(fill="both")
 
-            nombre_label = ttk.Label(inner_frame, text=f"Nombre del Producto: {producto[0]}", anchor="center", width=ancho_label)
+            nombre_label = ttk.Label(inner_frame, text=f"Nombre del Producto: {producto[0]}", width=ancho_label, anchor="center")
             nombre_label.pack(fill="both")
 
-            descripcion_label = ttk.Label(inner_frame, text=f"Descripción del Producto: {producto[1]}", anchor="center", width=ancho_label)
+            descripcion_label = ttk.Label(inner_frame, text=f"Descripción del Producto: {producto[1]}", width=ancho_label, anchor="center")
             descripcion_label.pack(fill="both")
 
-            series_label = ttk.Label(inner_frame, text=f"Series: {producto[2]}", anchor="center", width=ancho_label)
+            series_label = ttk.Label(inner_frame, text=f"Series: {producto[2]}", width=ancho_label, anchor="center")
             series_label.pack(fill="both")
 
         inner_frame.update_idletasks()
