@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 from miapp.pantalla_agregar_serie import PantallaAgregarSerie
 from miapp.pantalla_resumen import PantallaResumen
 
+
 class PantallaAgregarProductos:
     def __init__(self, root, numero_guia, nombre_empresa, fecha, cantidad_productos, file_name1, file_name2, pantalla_formulario):
         self.root = root
@@ -105,18 +106,25 @@ class PantallaAgregarProductos:
         self.pantalla_formulario.root.deiconify()
 
     def save(self):
-        # Obtiene los valores de los productos guardados
         productos_guardados = []
         for i, producto in enumerate(self.productos, start=1):
             nombre_producto = producto[0].get()
             descripcion_producto = producto[1].get()
             series_producto = producto[2].get()
             productos_guardados.append((nombre_producto, descripcion_producto, series_producto))
-
-        # Oculta la ventana actual
+        
+        # Impresión de valores para saber como se están pasando
+        print("----- Resumen en consola -------")
+        print(f"Número de guía: {self.numero_guia}")
+        print(f"Nombre de la empresa: {self.nombre_empresa}")
+        print(f"Fecha: {self.fecha}")
+        print(f"Canridad de productos: {self.cantidad_productos}")
+        print(f"Nombre del pdf 1: {self.file_name1}")
+        print(f"Nombre del pdf 2: {self.file_name2}")
+        print("--------------------------------")
+        
         self.root.withdraw()
 
-        # Abre la pantalla de resumen y pasa todas las variables
         pantalla_resumen_window = tk.Toplevel(self.pantalla_formulario.root)
         pantalla_resumen = PantallaResumen(
             pantalla_resumen_window,
