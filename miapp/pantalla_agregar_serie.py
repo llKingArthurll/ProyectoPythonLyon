@@ -7,6 +7,10 @@ class PantallaAgregarSerie:
         self.entry_target = entry_target
         self.pantalla_agregar_productos = pantalla_agregar_productos
         self.root.title("Agregar Serie")
+        
+        # Bloquear el cambio de tamaño de la ventana
+        self.root.resizable(width=False, height=False)
+        
         self.root.geometry("300x120")
 
         label = tk.Label(self.root, text="Agregar Serie:")
@@ -16,11 +20,8 @@ class PantallaAgregarSerie:
         self.entry_serie.pack(pady=10)
         self.entry_serie.focus_set()
 
-        button_agregar = tk.Button(self.root, text="Agregar", command=self.agregar_serie, width=10)
-        button_agregar.pack(side="left", padx=5)
-
         button_listo = tk.Button(self.root, text="Listo", command=self.cerrar_ventana, width=10)
-        button_listo.pack(side="right", padx=5)
+        button_listo.pack(side="bottom", pady=10)
 
         keyboard.hook(self.handle_key_event)
 
@@ -32,7 +33,7 @@ class PantallaAgregarSerie:
         if not self.root.winfo_exists():
             return
         serie = self.entry_serie.get()
-        
+
         if serie:
             entry_target_value = self.entry_target.get()
             nueva_serie = f"{entry_target_value} {serie}" if entry_target_value else serie
