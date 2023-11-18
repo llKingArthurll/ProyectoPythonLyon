@@ -2,7 +2,6 @@ import os
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from datetime import datetime
-import pdfplumber
 from tkcalendar import DateEntry
 from miapp.config import screen_width, screen_height
 from miapp.pantalla_agregar_productos import PantallaAgregarProductos
@@ -43,8 +42,6 @@ class PantallaFormulario:
         self.frames = []
         self.file_name_guia = tk.StringVar()
         self.file_name_factura = tk.StringVar()
-        self.file_content_guia = None
-        self.file_content_factura = None
 
         frame1 = self.crear_frame_input(container, "N° de guía:", ValidadorInput.validar_alphanumeric, 40, focus=True)
         frame2 = self.crear_frame_input(container, "Nombre de la empresa:", ValidadorInput.validar_texto, 50)
@@ -124,29 +121,21 @@ class PantallaFormulario:
         date_picker = event.widget
         date = date_picker.get_date()
         fecha_formato_deseado = date.strftime("%d/%m/%Y")
-        date_picker.var.set(fecha_formato_deseado)
+        date_picker.set_date(fecha_formato_deseado)
 
     def upload_file(self, file_name_var):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
         if file_path and file_path.lower().endswith(".pdf"):
             file_name = os.path.basename(file_path)
-            file_name_var.set(f"Nombre del archivo: {file_name}")
-            self.file_label_guia.config(text=f"Nombre del archivo: {file_name}")
-            # Lee el contenido del PDF y lo guarda en la variable
-            with pdfplumber.open(file_path) as pdf:
-                first_page = pdf.pages[0]
-                self.file_content_guia = first_page.extract_text()
+            file_name_var.set(file_name)
+            self.file_label_guia.config(text=f"Nombre de la guía: {file_name}")
 
     def upload_file2(self, file_name_var):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
         if file_path and file_path.lower().endswith(".pdf"):
             file_name = os.path.basename(file_path)
-            file_name_var.set(f"Nombre del archivo: {file_name}")
-            self.file_label_factura.config(text=f"Nombre del archivo: {file_name}")
-            # Lee el contenido del PDF y lo guarda en la variable
-            with pdfplumber.open(file_path) as pdf:
-                first_page = pdf.pages[0]
-                self.file_content_factura = first_page.extract_text()
+            file_name_var.set(file_name)
+            self.file_label_factura.config(text=f"Nombre de la factura: {file_name}")
 
     def cancel(self):
         self.root.destroy()

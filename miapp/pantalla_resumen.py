@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 class PantallaResumen:
-    def __init__(self, root, numero_guia, nombre_empresa, fecha, cantidad_productos, file_name1, file_name2, productos_guardados):
+    def __init__(self, root, numero_guia, nombre_empresa, fecha, cantidad_productos, file_name1, file_name2, productos_guardados, pantalla_formulario):
         self.root = root
         self.numero_guia = numero_guia
         self.nombre_empresa = nombre_empresa
@@ -11,6 +11,8 @@ class PantallaResumen:
         self.file_name1 = file_name1
         self.file_name2 = file_name2
         self.productos_guardados = productos_guardados
+        self.pantalla_formulario = pantalla_formulario
+        
 
         self.root.title("Resumen")
         self.root.geometry("500x650")
@@ -96,7 +98,10 @@ class PantallaResumen:
         guardar_button.pack(side="right", padx=10)
 
     def cancelar(self):
-        self.root.destroy()
+        self.root.withdraw()
+        # Llama a la función correspondiente de la pantalla anterior
+        self.pantalla_formulario.root.deiconify()
+
 
     def guardar(self):
         messagebox.showinfo("Guardado", "La información ha sido guardada exitosamente.")

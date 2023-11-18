@@ -134,7 +134,8 @@ class PantallaAgregarProductos:
             self.cantidad_productos,
             self.file_name1,
             self.file_name2,
-            productos_guardados
+            productos_guardados,
+            self.pantalla_formulario
         )
 
 if __name__ == "__main__":
