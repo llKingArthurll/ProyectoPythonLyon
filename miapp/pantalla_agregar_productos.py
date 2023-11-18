@@ -18,6 +18,7 @@ class PantallaAgregarProductos:
         self.entry_series_dict = {}
         self.pantalla_agregar_serie_window = None
         self.root.title("Agregar Productos")
+        self.root.resizable(width=False, height=False)
         self.root.geometry("615x500")
 
         self.canvas = tk.Canvas(self.root)
