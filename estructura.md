@@ -1,15 +1,21 @@
-MiAppPOO/
-|-- main.py
+PROYECTOPYTHON/
 |-- miapp/
-| |-- init.py
+| |-- __init__.py
+| |-- config.py
+| |-- pantalla_agregar_productos.py
+| |-- pantalla_agregar_serie.py
 | |-- pantalla_bienvenida.py
 | |-- pantalla_formulario.py
-| |-- pantalla_datos.py
+| |-- pantalla_opciones.py
+| |-- pantalla_resumen.py
 |-- datos/
-| |-- init.py
-| |-- archivo_datos.csv
+| |-- __init__.py
+| |-- 
 |-- pruebas/
-| |-- init.py
-| |-- test_pantalla_formulario.py
-| |-- test_pantalla_datos.py
-|-- README.md
+| |-- __init__.py
+| |--
+|-- resources/
+|-- .gitignore
+|-- estructura.md
+|-- main.py
+|-- requirements.txt
