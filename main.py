@@ -1,16 +1,10 @@
-from miapp.pantalla_bienvenida import PantallaBienvenida
-import tkinter as tk
+# main.py
 
-class MiApp:
-    def __init__(self, root):
-        self.root = root
-        self.pantalla_inicio = PantallaBienvenida(self.root)
+from app.controllers.app_controller import AppController
 
-    def run(self):
-        self.pantalla_inicio.mostrar_bienvenida()
-        self.root.mainloop()
+def main():
+    app_controller = AppController()
+    app_controller.start()
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = MiApp(root)
-    app.run()
+    main()

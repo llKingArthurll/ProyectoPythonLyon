@@ -1,17 +1,14 @@
 import tkinter as tk
 import keyboard
 
-class PantallaAgregarSerie:
+class AgregarSerieView:
     def __init__(self, root, entry_target, pantalla_agregar_productos):
         self.root = root
         self.entry_target = entry_target
         self.pantalla_agregar_productos = pantalla_agregar_productos
         self.root.title("Agregar Serie")
-        
-        # Bloquear el cambio de tamaño de la ventana
         self.root.resizable(width=False, height=False)
-        
-        self.root.geometry("300x120")
+        self.root.geometry("300x130")
 
         label = tk.Label(self.root, text="Agregar Serie:")
         label.pack(pady=10)
@@ -46,8 +43,3 @@ class PantallaAgregarSerie:
 
     def cerrar_ventana(self):
         self.root.destroy()
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = PantallaAgregarSerie(root, None, None)
-    root.mainloop()

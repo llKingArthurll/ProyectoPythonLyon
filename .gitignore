@@ -1,2 +1,4 @@
-miapp/__pycache__/
-pruebas.py
+app/config/__pycache__
+app/controllers/__pycache__
+app/data/__pycache__
+app/views/__pycache__
