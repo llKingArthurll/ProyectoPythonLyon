@@ -3,8 +3,8 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from datetime import datetime
 from tkcalendar import DateEntry
-from miapp.config import screen_width, screen_height
-from miapp.pantalla_agregar_productos import PantallaAgregarProductos
+from app.config.screen_config import screen_width, screen_height
+from app.data.data_manager import DataManager
 
 class ValidadorInput:
     @staticmethod
@@ -19,20 +19,23 @@ class ValidadorInput:
     def validar_numero(P, max_length):
         return len(P) <= int(max_length) and P.isdigit()
 
-class PantallaFormulario:
-    def __init__(self, root, pantalla_opciones):
+class IngresarNuevoView:
+    def __init__(self, root, controller):
         self.root = root
-        self.pantalla_opciones = pantalla_opciones
+        self.controller = controller
         self.configurar_ventana()
 
-        self.label = tk.Label(self.root, text="Registrar Nueva Guía", font=("Helvetica", 25))
-        self.label.pack(pady=25)
+        self.label = tk.Label(self.root, text="¡Bienvenido al ingreso de nuevos productos!", font=("Helvetica", 20))
+        self.label.pack(pady=20)
 
         container = tk.Frame(self.root, padx=250)
         container.pack(expand=True, fill="both")
 
         self.crear_frames(container)
         self.crear_botones(container)
+        
+        # Obtener la instancia de DataManager
+        self.data_manager = DataManager.get_instance()
 
     def configurar_ventana(self):
         self.root.title("Ingresar Nuevo")
@@ -87,9 +90,6 @@ class PantallaFormulario:
         upload_button = tk.Button(frame, text="Subir archivo", command=lambda: command_func(file_name_var))
         upload_button.pack(side="left")
 
-        file_label = tk.Label(frame, textvariable=file_name_var, wraplength=200)
-        file_label.pack(side="left", pady=(5, 0))
-
         return frame
 
     def posicionar_frames(self, container):
@@ -97,13 +97,14 @@ class PantallaFormulario:
             row, col = divmod(i, 3)
             frame.grid(row=row, column=col, padx=10, pady=(screen_height - 600) // 2, sticky="nsew")
 
-        # Nuevas filas para mostrar nombres de archivos
         self.file_label_guia = tk.Label(container, text="", wraplength=200)
         self.file_label_guia.grid(row=2, column=0, columnspan=2, pady=(5, 0))
 
         self.file_label_factura = tk.Label(container, text="", wraplength=200)
         self.file_label_factura.grid(row=2, column=1, columnspan=2, pady=(5, 0))
 
+        tk.Label(container).grid(row=3, column=0, columnspan=3, pady=(5, 0))
+            
         container.grid_columnconfigure(0, weight=1)
         container.grid_columnconfigure(1, weight=1)
 
@@ -129,6 +130,8 @@ class PantallaFormulario:
             file_name = os.path.basename(file_path)
             file_name_var.set(file_name)
             self.file_label_guia.config(text=f"Nombre de la guía: {file_name}")
+            self.file_path_guia = file_path
+            
 
     def upload_file2(self, file_name_var):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
@@ -136,20 +139,28 @@ class PantallaFormulario:
             file_name = os.path.basename(file_path)
             file_name_var.set(file_name)
             self.file_label_factura.config(text=f"Nombre de la factura: {file_name}")
+            self.file_path_factura = file_path
 
+    def mostrar_ingresar_nuevo(self):
+        self.root.mainloop()
+        
     def cancel(self):
-        self.root.destroy()
-        if self.pantalla_opciones:
-            self.pantalla_opciones.root.deiconify()
+        self.root.withdraw()
+        self.controller.mostrar_opciones()
 
     def continue_form(self):
-        if self.validar_formulario():
-            self.mostrar_siguiente_pantalla()
+        if not self.validar_formulario():
+            return
+        print("Ruta de la guía:", self.file_path_guia)
+        print("Ruta de la factura:", self.file_path_factura)
+        self.guardar_datos()
+        self.root.withdraw()
+        self.controller.mostrar_ingreso_producto()
 
     def validar_formulario(self):
         for frame in self.frames:
-            if isinstance(frame.winfo_children()[1], tk.Entry):  # Verificar si es un widget de tipo Entry
-                entry = frame.winfo_children()[1]  # Acceder al widget Entry dentro de cada frame
+            if isinstance(frame.winfo_children()[1], tk.Entry):
+                entry = frame.winfo_children()[1]
                 if not entry.get().strip():
                     messagebox.showerror("Error", "Por favor, complete todos los campos.")
                     return False
@@ -162,29 +173,25 @@ class PantallaFormulario:
             return False
         return True
 
-    def mostrar_siguiente_pantalla(self):
-        self.root.withdraw()
+    def guardar_datos(self):
         numero_guia = self.frames[0].winfo_children()[1].get().strip()
         nombre_empresa = self.frames[1].winfo_children()[1].get().strip()
         fecha = self.frames[2].winfo_children()[1].get().strip()
         cantidad_productos = self.frames[3].winfo_children()[1].get().strip()
         file_name_guia = self.file_name_guia.get().strip()
         file_name_factura = self.file_name_factura.get().strip()
+        file_path_guia = self.file_path_guia
+        file_path_factura = self.file_path_factura
 
-        agregar_productos_window = tk.Toplevel(self.root)
-        agregar_productos_screen = PantallaAgregarProductos(
-            agregar_productos_window,
+        self.data_manager = DataManager.get_instance()
+        self.data_manager.set_data(
             numero_guia,
             nombre_empresa,
             fecha,
             cantidad_productos,
             file_name_guia,
             file_name_factura,
-            self
+            file_path_guia,
+            file_path_factura
         )
-        agregar_productos_window.mainloop()
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = PantallaFormulario(root, None)
-    root.mainloop()
+        self.data_manager.save_files()
