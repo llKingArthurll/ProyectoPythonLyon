@@ -194,4 +194,3 @@ class IngresarNuevoView:
             file_path_guia,
             file_path_factura
         )
-        self.data_manager.save_files()

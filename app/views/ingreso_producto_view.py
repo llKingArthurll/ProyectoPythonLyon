@@ -41,10 +41,6 @@ class IngresoProductoView:
     def mostrar_ingreso_producto(self):
         self.root.mainloop()
 
-    def cancelar(self):
-        self.root.withdraw()
-        self.controller.mostrar_ingresar_nuevo()
-
     def create_content(self):
         for i in range(1, int(self.data_manager.get_cantidad_productos()) + 1):
             frame_product = tk.Frame(self.frame, padx=0, pady=10)
@@ -100,5 +96,21 @@ class IngresoProductoView:
             self.agregar_serie_view_window = tk.Toplevel(self.root)
             agregar_serie_view = AgregarSerieView(self.agregar_serie_view_window, entry_series, self)
 
+    def cancelar(self):
+        self.root.withdraw()
+        self.controller.mostrar_ingresar_nuevo()
+    
     def mostrar_resumen_view(self):
         print("Pasando los datos al resumen...")
+
+        productos_data = []
+        for entry2, entry3, entry_series in self.productos:
+            nombre_producto = entry2.get()
+            descripcion_producto = entry3.get()
+            series_producto = entry_series.get()
+            productos_data.append((nombre_producto, descripcion_producto, series_producto))
+
+        self.data_manager.set_ingreso_producto_data(productos_data)
+
+        self.root.withdraw()
+        self.controller.mostrar_resumen_view()
