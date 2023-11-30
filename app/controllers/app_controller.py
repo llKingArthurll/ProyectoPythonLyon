@@ -5,6 +5,7 @@ from app.views.opciones_view import OpcionesView
 from app.views.ingresar_nuevo_view import IngresarNuevoView
 from app.views.ingreso_producto_view import IngresoProductoView
 from app.views.buscar_producto_view import BuscarProductoView
+from app.views.resumen_productos_view import ResumenProductosView
 
 class AppController:
     def __init__(self):
@@ -37,6 +38,12 @@ class AppController:
         buscar_producto_root = tk.Toplevel(self.root)
         buscar_producto_view = BuscarProductoView(buscar_producto_root, self)
         buscar_producto_view.mostrar_buscar_producto()
+    
+    def mostrar_resumen_view(self):
+        self.root.withdraw()
+        resumen_productos_root = tk.Toplevel(self.root)
+        resumen_view = ResumenProductosView(resumen_productos_root, self)
+        resumen_view.mostrar_resumen_view()
 
 if __name__ == "__main__":
     app_controller = AppController()

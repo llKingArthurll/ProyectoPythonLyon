@@ -21,7 +21,7 @@ class DataManager:
             self.file_name_factura = None
             self.file_path_guia = None
             self.file_path_factura = None
-            self.ingreso_producto_data = None  # Nueva variable para almacenar datos de ingreso de productos
+            self.ingreso_producto_data = None
 
     def set_data(self, numero_guia, nombre_empresa, fecha, cantidad_productos, file_name_guia, file_name_factura, file_path_guia, file_path_factura):
         self.numero_guia = numero_guia
@@ -53,6 +53,9 @@ class DataManager:
 
     def get_file_name_factura(self):
         return self.file_name_factura
+
+    def get_ingreso_producto_data(self):
+        return self.ingreso_producto_data
 
     def get_ingreso_producto_data(self):
         return self.ingreso_producto_data
