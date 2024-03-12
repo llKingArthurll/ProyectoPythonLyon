@@ -1,8 +1,8 @@
-# app/views/resumen_productos_view.py
-
 import tkinter as tk
 from tkinter import ttk
 from app.data.data_manager import DataManager
+from app.data.db_connection import DatabaseConnection
+from app.data.db_queries import DatabaseQueries
 
 class ResumenProductosView:
     def __init__(self, root, controller):
@@ -11,6 +11,9 @@ class ResumenProductosView:
         self.root.title("Resumen de Productos")
         self.root.geometry("400x600")
         self.root.resizable(True, True)
+
+        # Inicializar productos
+        self.inicializar_productos()
 
         self.label = tk.Label(root, text="¡Bienvenido a Resumen!")
         self.label.pack(pady=20)
@@ -43,6 +46,9 @@ class ResumenProductosView:
 
         self.guardar_button = tk.Button(self.botones_frame, text="Guardar", command=self.guardar)
         self.guardar_button.pack(side="left", padx=10)
+
+    def inicializar_productos(self):
+        self.productos = []
 
     def mostrar_datos(self):
         data_manager = DataManager.get_instance()
@@ -77,9 +83,49 @@ class ResumenProductosView:
             self.controller.mostrar_ingresar_nuevo()
 
     def guardar(self):
-        print("Preparando datos para guardar...")
-        print("Guardando datos...")
+        """
+        Guarda los datos en la base de datos.
+        """
+        data_manager = DataManager.get_instance()
+        db_queries = DatabaseQueries(DatabaseConnection())
+
+        # Obtén los datos del DataManager
+        numero_guia = data_manager.get_numero_guia()
+        nombre_empresa = data_manager.get_nombre_empresa()
+        cantidad_productos = data_manager.get_cantidad_productos()
+        fecha_guia = data_manager.get_fecha()
+        save_data = data_manager.get_fecha_actual()
+        path_guia = "Insertar guías aquí"
+        path_factura = "Insertar facturas aquí"
+
+        # Obtén los detalles de los productos
+        productos_data = data_manager.get_ingreso_producto_data()
+        nombres_productos = [producto[0] for producto in productos_data]
+        descripciones_productos = [producto[1] for producto in productos_data]
+        series_productos = [producto[2] for producto in productos_data]
+
+        # Convierte las listas en strings separados por comas
+        nombre_producto_str = ",".join(nombres_productos)
+        descripcion_producto_str = ",".join(descripciones_productos)
+        series_producto_str = ",".join(series_productos)
+
+        # Limpia los datos del DataManager
+        data_manager.clear_data()
+
+        # Inserta en la tabla 'nuevo_registro'
+        db_queries.insert_nuevo_registro((
+            numero_guia, nombre_empresa, cantidad_productos, fecha_guia, save_data, path_guia, path_factura,
+            nombre_producto_str, descripcion_producto_str, series_producto_str
+        ))
+
+        # Cierra la conexión
+        db_queries.db_connection.close_connection()
         print("¡Datos guardados exitosamente!")
+        print(f"Se guardó satisfactoriamente el {save_data}")
+        print(f"La ruta de la factura es: {path_factura}")
+        print(f"La ruta de la guía es: {path_guia}")
+
+
 
     def on_frame_configure(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
