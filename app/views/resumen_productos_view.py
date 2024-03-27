@@ -83,9 +83,6 @@ class ResumenProductosView:
             self.controller.mostrar_ingresar_nuevo()
 
     def guardar(self):
-        """
-        Guarda los datos en la base de datos.
-        """
         data_manager = DataManager.get_instance()
         db_queries = DatabaseQueries(DatabaseConnection())
 
@@ -124,8 +121,6 @@ class ResumenProductosView:
         print(f"Se guardó satisfactoriamente el {save_data}")
         print(f"La ruta de la factura es: {path_factura}")
         print(f"La ruta de la guía es: {path_guia}")
-
-
 
     def on_frame_configure(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
