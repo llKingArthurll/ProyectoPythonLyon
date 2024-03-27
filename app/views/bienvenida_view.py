@@ -2,6 +2,8 @@
 import tkinter as tk
 from tkinter import PhotoImage
 from app.config.screen_config import screen_width, screen_height
+from PIL import Image, ImageTk
+
 
 class BienvenidaView:
     def __init__(self, root, controller):
@@ -12,7 +14,7 @@ class BienvenidaView:
 
         self.root.iconbitmap("resources/LogoLyon.ico")
 
-        self.title_label = tk.Label(root, text="Bienvenido(a) al Sistema", font=("Verdana", 25), pady=10, fg="black")
+        self.title_label = tk.Label(root, text="Bienvenido(a) al Sistema", font=("Verdana", 15), pady=10, fg="black")
         self.title_label.pack(pady=20)
 
         imagen_path = "resources/logoFondo.png"
@@ -21,7 +23,7 @@ class BienvenidaView:
         self.imagen_label = tk.Label(root, image=self.imagen)
         self.imagen_label.pack(pady=10)
 
-        self.continuar_button = tk.Button(root, text="Continuar", command=self.continuar_presionado)
+        self.continuar_button = tk.Button(root, text="Continuar", command=self.continuar_presionado, pady=10,bg="#FE6E0C",fg="white", height=-5, width=10)
         self.continuar_button.pack(pady=10)
 
     def continuar_presionado(self):

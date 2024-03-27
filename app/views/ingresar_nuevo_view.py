@@ -5,6 +5,7 @@ from datetime import datetime
 from tkcalendar import DateEntry
 from app.config.screen_config import screen_width, screen_height
 from app.data.data_manager import DataManager
+from PIL import Image, ImageTk
 
 class ValidadorInput:
     @staticmethod
@@ -24,6 +25,8 @@ class IngresarNuevoView:
         self.root = root
         self.controller = controller
         self.configurar_ventana()
+        self.root.iconbitmap("resources/LogoLyon.ico")
+        
 
         self.label = tk.Label(self.root, text="¡Bienvenido al ingreso de nuevos productos!", font=("Helvetica", 20))
         self.label.pack(pady=20)
@@ -112,10 +115,10 @@ class IngresarNuevoView:
         button_frame = tk.Frame(self.root)
         button_frame.pack(side="bottom", padx=10, pady=(10, 100))
 
-        cancel_button = tk.Button(button_frame, text="Cancelar", command=self.cancel)
+        cancel_button = tk.Button(button_frame, text="Cancelar", command=self.cancel, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
         cancel_button.pack(side="left", padx=50)
 
-        continue_button = tk.Button(button_frame, text="Continuar", command=self.continue_form)
+        continue_button = tk.Button(button_frame, text="Continuar", command=self.continue_form, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
         continue_button.pack(side="right", padx=50)
 
     def date_changed(self, event):
