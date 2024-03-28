@@ -69,6 +69,7 @@ class BuscarProductoView:
         
         # Vincular el evento de presionar la tecla "Enter" con la función buscar_en_tabla
         self.search_entry.bind("<Return>", lambda event: self.buscar_en_tabla())
+        
 
     def mostrar_resumen_nuevoingreso(self):
         resumen_nuevoingreso = self.db_queries.list_resumen_nuevoingreso()
@@ -101,19 +102,20 @@ class BuscarProductoView:
             # Si no hay filas seleccionadas, devolver None o algún otro valor que indique que no hay selección
             return None
 
-
     def on_select_row(self, event):
         selected_id = self.get_selected_id()
 
-        # Imprimir el ID seleccionado por consola
-        print(f"ID seleccionado: {selected_id}")
+        # Verificar si se ha seleccionado una fila
+        if selected_id is not None:
+            # Imprimir el ID seleccionado por consola
+            print(f"ID seleccionado: {selected_id}")
 
-        # Crear una nueva ventana para la vista "buscar_producto_especifico_view"
-        nueva_ventana = tk.Toplevel(self.root)
-        nueva_ventana.title(f"Información del Producto - ID: {selected_id}")
+            # Crear una nueva ventana para la vista "buscar_producto_especifico_view"
+            nueva_ventana = tk.Toplevel(self.root)
+            nueva_ventana.title(f"Información del Producto - ID: {selected_id}")
 
-        # Pasar el ID seleccionado a la nueva vista
-        BuscarProductoEspecificoView(nueva_ventana, self.controller, selected_id)
+            # Pasar el ID seleccionado a la nueva vista
+            BuscarProductoEspecificoView(nueva_ventana, self.controller, selected_id)
 
     def buscar_en_tabla(self):
         # Obtener el texto de búsqueda
