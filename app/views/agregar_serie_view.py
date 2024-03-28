@@ -1,5 +1,6 @@
 import tkinter as tk
 import keyboard
+from PIL import Image, ImageTk
 
 class AgregarSerieView:
     def __init__(self, root, entry_target, pantalla_agregar_productos):
@@ -9,6 +10,8 @@ class AgregarSerieView:
         self.root.title("Agregar Serie")
         self.root.resizable(width=False, height=False)
         self.root.geometry("300x130")
+        self.root.iconbitmap("resources/LogoLyon.ico")
+        
 
         label = tk.Label(self.root, text="Agregar Serie:")
         label.pack(pady=10)

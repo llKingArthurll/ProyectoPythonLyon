@@ -3,6 +3,7 @@ from tkinter import ttk
 from app.data.data_manager import DataManager
 from app.data.db_connection import DatabaseConnection
 from app.data.db_queries import DatabaseQueries
+from PIL import Image, ImageTk
 
 class ResumenProductosView:
     def __init__(self, root, controller):
@@ -11,11 +12,12 @@ class ResumenProductosView:
         self.root.title("Resumen de Productos")
         self.root.geometry("400x600")
         self.root.resizable(True, True)
+        self.root.iconbitmap("resources/LogoLyon.ico")
 
         # Inicializar productos
         self.inicializar_productos()
 
-        self.label = tk.Label(root, text="¡Bienvenido a Resumen!")
+        self.label = tk.Label(root, text="¡Bienvenido a Resumen!", font=("Arial", 15, "bold"))
         self.label.pack(pady=20)
 
         self.scroll_frame = tk.Frame(root)
@@ -41,10 +43,10 @@ class ResumenProductosView:
         self.botones_frame = tk.Frame(root)
         self.botones_frame.pack(pady=10)
 
-        self.cancelar_button = tk.Button(self.botones_frame, text="Cancelar", command=self.cancelar)
+        self.cancelar_button = tk.Button(self.botones_frame, text="Cancelar", command=self.cancelar, width=14, bg="#215B6F",fg="white", font=("Arial", 8))
         self.cancelar_button.pack(side="left", padx=10)
 
-        self.guardar_button = tk.Button(self.botones_frame, text="Guardar", command=self.guardar)
+        self.guardar_button = tk.Button(self.botones_frame, text="Guardar", command=self.guardar, width=14, bg="#215B6F",fg="white", font=("Arial", 8))
         self.guardar_button.pack(side="left", padx=10)
 
     def inicializar_productos(self):
