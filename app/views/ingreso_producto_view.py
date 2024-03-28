@@ -10,14 +10,15 @@ class IngresoProductoView:
         self.root.title("Ingreso de Producto")
         self.root.geometry("615x500")
         self.root.resizable(False, False)
+        self.root.iconbitmap("resources/LogoLyon.ico")
 
-        self.label = tk.Label(root, text="¡Bienvenido al ingreso de productos!")
+        self.label = tk.Label(root, text="Ingresa los datos de los productos", font=("Arial", 15, "bold"))
         self.label.pack(pady=20)
 
         self.data_manager = DataManager()
         cantidad_productos = self.data_manager.get_cantidad_productos()
 
-        cantidad_label = tk.Label(root, text=f"Cantidad de productos: {cantidad_productos}")
+        cantidad_label = tk.Label(root, text=f"Cantidad de productos: {cantidad_productos}", font=("Arial", 12, "bold"))
         cantidad_label.pack(pady=10)
 
         self.entry_series_dict = {}
@@ -46,7 +47,7 @@ class IngresoProductoView:
             frame_product = tk.Frame(self.frame, padx=0, pady=10)
             frame_product.pack(anchor="w", pady=(0, 10), fill="x")
 
-            label1 = tk.Label(frame_product, text=f"Producto {i}:", anchor="e")
+            label1 = tk.Label(frame_product, text=f"Producto {i}:", anchor="e", font=("Arial", 10, "bold"))
             label1.grid(row=0, column=0, sticky="w", padx=(15, 5))
 
             label2 = tk.Label(frame_product, text="Nombre del producto:", anchor="e")
@@ -70,20 +71,20 @@ class IngresoProductoView:
             entry_series.grid(row=3, column=1, padx=(5, 10), pady=(5, 5))
             entry_series.insert(0, "Ingrese series")
 
-            button_agregar_serie = tk.Button(frame_product, text="Agregar Serie", command=lambda i=i, entry_series=entry_series: self.abrir_agregar_serie_view(entry_series), width=14)
+            button_agregar_serie = tk.Button(frame_product, text="Agregar Serie", command=lambda i=i, entry_series=entry_series: self.abrir_agregar_serie_view(entry_series), width=14, bg="#BB7223",fg="white", font=("Arial", 8))
             button_agregar_serie.grid(row=2, column=2, padx=(5, 10), pady=(5, 5))
 
-            button_reestablecer_serie = tk.Button(frame_product, text="Reestablecer Serie", command=lambda entry_series=entry_series: self.reestablecer_serie(entry_series), width=14)
+            button_reestablecer_serie = tk.Button(frame_product, text="Reestablecer Serie", command=lambda entry_series=entry_series: self.reestablecer_serie(entry_series), width=14, bg="#215B6F",fg="white", font=("Arial", 8))
             button_reestablecer_serie.grid(row=3, column=2, padx=(5, 10), pady=(5, 5))
 
             self.entry_series_dict[i] = entry_series
             self.productos.append((entry2, entry3, entry_series))
 
-        self.cancelar_button = tk.Button(self.frame, text="Cancelar", command=self.cancelar)
-        self.cancelar_button.pack(pady=10, side="left", anchor="center")
+        self.cancelar_button = tk.Button(self.frame, text="Cancelar", command=self.cancelar, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
+        self.cancelar_button.pack(pady=10, padx=80, side="left", anchor="center")
 
-        self.continuar_button = tk.Button(self.frame, text="Continuar", command=self.mostrar_resumen_view)
-        self.continuar_button.pack(pady=10, side="right", anchor="center")
+        self.continuar_button = tk.Button(self.frame, text="Continuar", command=self.mostrar_resumen_view,  bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
+        self.continuar_button.pack(pady=10, padx=80, side="right", anchor="center")
 
     def reestablecer_serie(self, entry_series):
         entry_series.config(state="normal")

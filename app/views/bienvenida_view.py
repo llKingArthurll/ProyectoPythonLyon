@@ -21,7 +21,7 @@ class BienvenidaView:
         self.imagen_label = tk.Label(root, image=self.imagen)
         self.imagen_label.pack(pady=10)
 
-        self.continuar_button = tk.Button(root, text="Continuar", command=self.continuar_presionado)
+        self.continuar_button = tk.Button(root, text="Continuar", command=self.continuar_presionado, pady=10,bg="#FE6E0C",fg="white", height=-5, width=10)
         self.continuar_button.pack(pady=10)
 
     def continuar_presionado(self):

@@ -11,7 +11,8 @@ class BuscarProductoView:
         self.controller = controller
         self.root.title("Buscar Producto")
         self.root.geometry("800x600")
-
+        self.root.iconbitmap("resources/LogoLyon.ico")
+        
         # Conexión a la base de datos
         self.db_queries = DatabaseQueries(DatabaseConnection())
 
@@ -28,11 +29,11 @@ class BuscarProductoView:
         self.search_entry.grid(row=0, column=0, padx=20)
 
         # Agregar botón de búsqueda
-        self.search_button = tk.Button(search_frame, text="Buscar", command=self.buscar_en_tabla)
+        self.search_button = tk.Button(search_frame, text="Buscar", command=self.buscar_en_tabla, bg="#6287A2",fg="white", height=2, width=10, font=("Arial", 9))
         self.search_button.grid(row=0, column=1, padx=10)
 
         # Agregar botón de borrar
-        self.clear_button = tk.Button(search_frame, text="Borrar", command=self.borrar_tabla)
+        self.clear_button = tk.Button(search_frame, text="Borrar", command=self.borrar_tabla, bg="#6287A2",fg="white", height=2, width=10, font=("Arial", 9))
         self.clear_button.grid(row=0, column=2, padx=10)
 
         # Agregar tabla
@@ -60,7 +61,7 @@ class BuscarProductoView:
         self.mostrar_resumen_nuevoingreso()
 
         # Agregar botón para volver a opciones
-        self.volver_button = tk.Button(self.root, text="Volver a Opciones", command=self.volver_a_opciones)
+        self.volver_button = tk.Button(self.root, text="Volver a Opciones", command=self.volver_a_opciones, bg="#FE6E0C",fg="white", height=2, width=20, font=("Arial", 9))
         self.volver_button.pack(side="bottom", pady=10)
 
         # Variable para almacenar ID seleccionado
