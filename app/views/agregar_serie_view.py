@@ -1,6 +1,4 @@
 import tkinter as tk
-import keyboard
-from PIL import Image, ImageTk
 
 class AgregarSerieView:
     def __init__(self, root, entry_target, pantalla_agregar_productos):
@@ -10,8 +8,6 @@ class AgregarSerieView:
         self.root.title("Agregar Serie")
         self.root.resizable(width=False, height=False)
         self.root.geometry("300x130")
-        self.root.iconbitmap("resources/LogoLyon.ico")
-        
 
         label = tk.Label(self.root, text="Agregar Serie:")
         label.pack(pady=10)
@@ -23,11 +19,11 @@ class AgregarSerieView:
         button_listo = tk.Button(self.root, text="Listo", command=self.cerrar_ventana, width=10)
         button_listo.pack(side="bottom", pady=10)
 
-        keyboard.hook(self.handle_key_event)
+        # Esperar 100 milisegundos antes de iniciar la detección de eventos
+        self.root.after(100, self.listen_for_input)
 
-    def handle_key_event(self, e):
-        if e.event_type == keyboard.KEY_DOWN and e.name == "enter":
-            self.agregar_serie()
+    def listen_for_input(self):
+        self.root.after(100, self.listen_for_input)
 
     def agregar_serie(self):
         if not self.root.winfo_exists():
