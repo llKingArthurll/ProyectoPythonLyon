@@ -60,16 +60,29 @@ class ResumenProductosView:
         cantidad_productos = data_manager.get_cantidad_productos()
         ingreso_producto_data = data_manager.get_ingreso_producto_data()
 
-        self.mostrar_label(f"Número de Guía: {numero_guia}")
-        self.mostrar_label(f"Nombre de la Empresa: {nombre_empresa}")
-        self.mostrar_label(f"Fecha: {fecha}")
-        self.mostrar_label(f"Cantidad de Productos: {cantidad_productos}")
+        self.mostrar_par_de_datos("Número de Guía:", numero_guia)
+        self.mostrar_par_de_datos("Nombre de la Empresa:", nombre_empresa)
+        self.mostrar_par_de_datos("Fecha:", fecha)
+        self.mostrar_par_de_datos("Cantidad de Productos:", cantidad_productos)
 
         for i, producto_data in enumerate(ingreso_producto_data, start=1):
             self.mostrar_label(f"\nProducto {i}:")
-            self.mostrar_label(f"Nombre del producto: {producto_data[0]}")
-            self.mostrar_label(f"Descripción del producto: {producto_data[1]}")
-            self.mostrar_label(f"Series del producto: {producto_data[2]}")
+            self.mostrar_par_de_datos("Nombre del producto:", producto_data[0])
+            self.mostrar_par_de_datos("Descripción del producto:", producto_data[1])
+            
+            # Reemplazar espacios en blanco por saltos de línea en las series
+            series = producto_data[2].replace(' ', '\n')
+            self.mostrar_par_de_datos("Series del producto:", series)
+
+    def mostrar_par_de_datos(self, nombre, valor):
+        frame = tk.Frame(self.inner_frame)
+        frame.pack(fill="x")
+
+        label_nombre = tk.Label(frame, text=nombre, anchor="e", width=20)
+        label_nombre.pack(side="left", padx=(10, 5))
+
+        label_valor = tk.Label(frame, text=valor, anchor="w")
+        label_valor.pack(side="left")
 
     def mostrar_resumen_view(self):
         self.root.mainloop()
