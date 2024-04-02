@@ -19,11 +19,8 @@ class AgregarSerieView:
         button_listo = tk.Button(self.root, text="Listo", command=self.cerrar_ventana, width=10)
         button_listo.pack(side="bottom", pady=10)
 
-        # Esperar 100 milisegundos antes de iniciar la detección de eventos
-        self.root.after(100, self.listen_for_input)
-
-    def listen_for_input(self):
-        self.root.after(100, self.listen_for_input)
+        # Vincular el evento de presionar Enter al método agregar_serie
+        self.entry_serie.bind("<Return>", lambda event: self.agregar_serie())
 
     def agregar_serie(self):
         if not self.root.winfo_exists():
@@ -31,14 +28,15 @@ class AgregarSerieView:
         serie = self.entry_serie.get()
 
         if serie:
-            entry_target_value = self.entry_target.get()
-            nueva_serie = f"{entry_target_value} {serie}" if entry_target_value else serie
+            entry_target_value = self.entry_target.get("1.0", "end-1c")
+            nueva_serie = f"{entry_target_value}\n{serie}" if entry_target_value else serie
             self.entry_target.config(state="normal")
-            self.entry_target.delete(0, tk.END)
-            self.entry_target.insert(0, nueva_serie)
-            self.entry_target.config(state="readonly")
+            self.entry_target.delete("1.0", "end")
+            self.entry_target.insert("1.0", nueva_serie)
+            self.entry_target.config(state="disabled")
             self.entry_serie.delete(0, tk.END)
             self.entry_serie.focus_set()
+
 
     def cerrar_ventana(self):
         self.root.destroy()
