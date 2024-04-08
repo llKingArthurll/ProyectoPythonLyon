@@ -1,197 +1,199 @@
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QDateEdit, QDesktopWidget, QMessageBox
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt, QDate
 import os
-import tkinter as tk
-from tkinter import filedialog, messagebox
-from datetime import datetime
-from tkcalendar import DateEntry
-from app.config.screen_config import screen_width, screen_height
 from app.data.data_manager import DataManager
 
-class ValidadorInput:
-    @staticmethod
-    def validar_alphanumeric(P, max_length):
-        return len(P) <= int(max_length) and P.isalnum()
+class IngresarNuevoView(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Ingresando nueva guía")
+        self.setWindowIcon(QIcon("resources/LogoLyon.ico"))  # Establecer el ícono de la ventana
+        self.initUI()
 
-    @staticmethod
-    def validar_texto(P, max_length):
-        return len(P) <= int(max_length)
+    def initUI(self):
+        # Tamaño de la pantalla completa
+        screen_geometry = QDesktopWidget().availableGeometry()
+        self.setGeometry(screen_geometry)
 
-    @staticmethod
-    def validar_numero(P, max_length):
-        return len(P) <= int(max_length) and P.isdigit()
+        # Título
+        title_label = QLabel("Ingresando nueva guía")
+        title_label.setAlignment(Qt.AlignCenter)
+        title_label.setStyleSheet("font-size: 32px;")  # Tamaño de fuente 32
 
-class IngresarNuevoView:
-    def __init__(self, root, controller):
-        self.root = root
-        self.controller = controller
-        self.configurar_ventana()
-        self.root.iconbitmap("resources/LogoLyon.ico")
-        
-        self.label = tk.Label(self.root, text="¡Bienvenido al ingreso de nuevos productos!", font=("Arial", 15, "bold"))
-        self.label.pack(pady=20)
+        # Número de Guía
+        numero_guia_label = QLabel("Número de Guía:")
+        numero_guia_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
+        numero_guia_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        self.numero_guia_entry = QLineEdit()
+        self.numero_guia_entry.setFixedWidth(150)  # Ancho del QLineEdit de 150 píxeles
 
-        container = tk.Frame(self.root, padx=250)
-        container.pack(expand=True, fill="both")
+        # Nombre de Empresa
+        nombre_empresa_label = QLabel("Nombre de Empresa:")
+        nombre_empresa_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
+        nombre_empresa_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        self.nombre_empresa_entry = QLineEdit()
+        self.nombre_empresa_entry.setFixedWidth(150)  # Ancho del QLineEdit de 150 píxeles
 
-        self.crear_frames(container)
-        self.crear_botones(container)
-        
-        # Obtener la instancia de DataManager
-        self.data_manager = DataManager.get_instance()
+        # Fecha
+        fecha_label = QLabel("Fecha:")
+        fecha_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
+        fecha_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        self.fecha_picker = QDateEdit()
+        self.fecha_picker.setDate(QDate.currentDate())  # Fecha por default: fecha de hoy
+        self.fecha_picker.setDisplayFormat("dd/MM/yyyy")
+        self.fecha_picker.setFixedWidth(150)  # Ancho del QDateEdit de 150 píxeles
 
-    def configurar_ventana(self):
-        self.root.title("Ingresar Nuevo")
-        self.root.geometry(f"{screen_width}x{screen_height}")
+        # Cantidad de Productos
+        cantidad_productos_label = QLabel("Cantidad de Productos:")
+        cantidad_productos_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
+        cantidad_productos_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        self.cantidad_productos_entry = QLineEdit()
+        self.cantidad_productos_entry.setFixedWidth(150)  # Ancho del QLineEdit de 150 píxeles
 
-    def crear_frames(self, container):
-        self.frames = []
-        self.file_name_guia = tk.StringVar()
-        self.file_name_factura = tk.StringVar()
+        # Factura
+        factura_label = QLabel("Archivo Factura:")
+        factura_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
+        factura_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        self.factura_file_label = QLabel("")  # Label para mostrar el nombre del archivo seleccionado
+        self.factura_file_label.setWordWrap(True)  # Habilitar el ajuste de texto
+        self.factura_file_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        self.factura_filename = ""  # Variable para guardar el nombre del PDF
+        subir_factura_button = QPushButton("Subir archivo")
+        subir_factura_button.setFixedWidth(80)  # Ancho del botón de subir archivo
+        subir_factura_button.clicked.connect(self.upload_factura)
 
-        frame1 = self.crear_frame_input(container, "N° de guía:", ValidadorInput.validar_alphanumeric, 40, focus=True)
-        frame2 = self.crear_frame_input(container, "Nombre de la empresa:", ValidadorInput.validar_texto, 50)
-        frame3 = self.crear_frame_fecha(container)
-        frame4 = self.crear_frame_input(container, "Cantidad de productos:", ValidadorInput.validar_numero, 2)
-        frame5 = self.crear_frame_archivo(container, "Subir guía:", self.upload_file, self.file_name_guia)
-        frame6 = self.crear_frame_archivo(container, "Subir factura:", self.upload_file2, self.file_name_factura)
+        # Guía
+        guia_label = QLabel("Archivo Guía:")
+        guia_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
+        guia_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        self.guia_file_label = QLabel("")  # Label para mostrar el nombre del archivo seleccionado
+        self.guia_file_label.setWordWrap(True)  # Habilitar el ajuste de texto
+        self.guia_file_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        self.guia_filename = ""  # Variable para guardar el nombre del PDF
+        subir_guia_button = QPushButton("Subir archivo")
+        subir_guia_button.setFixedWidth(80)  # Ancho del botón de subir archivo
+        subir_guia_button.clicked.connect(self.upload_guia)
 
-        self.frames.extend([frame1, frame2, frame3, frame4, frame5, frame6])
-        self.posicionar_frames(container)
+        # Botones de aceptar y cancelar
+        aceptar_button = QPushButton("Continuar")
+        aceptar_button.clicked.connect(self.continuar_ingreso)
+        cancelar_button = QPushButton("Cancelar")
+        cancelar_button.clicked.connect(self.cancelar)
 
-    def crear_frame_input(self, container, label_text, validation_func, max_length, focus=False):
-        frame = tk.Frame(container)
-        label = tk.Label(frame, text=label_text, width=20, anchor="e")
-        label.pack(side="left", padx=5)
+        # Layout principal
+        layout = QVBoxLayout()
+        layout.addWidget(title_label)
 
-        validation_command = (self.root.register(validation_func), "%P", max_length)
-        entry = tk.Entry(frame, validate="key", validatecommand=validation_command, width=25)
-        entry.pack(side="left")
-        if focus:
-            entry.focus_set()
+        # Layout para los primeros 3 elementos
+        first_row_layout = QHBoxLayout()
+        first_row_layout.addWidget(numero_guia_label)
+        first_row_layout.addWidget(self.numero_guia_entry)
+        first_row_layout.addWidget(nombre_empresa_label)
+        first_row_layout.addWidget(self.nombre_empresa_entry)
+        first_row_layout.addWidget(fecha_label)
+        first_row_layout.addWidget(self.fecha_picker)
+        layout.addLayout(first_row_layout)
 
-        return frame
+        # Layout para los siguientes 3 elementos
+        second_row_layout = QHBoxLayout()
+        second_row_layout.addWidget(cantidad_productos_label)
+        second_row_layout.addWidget(self.cantidad_productos_entry)
+        layout.addLayout(second_row_layout)
 
-    def crear_frame_fecha(self, container):
-        frame = tk.Frame(container)
-        label = tk.Label(frame, text="Fecha:", width=20, anchor="e")
-        label.pack(side="left", padx=5)
+        # Layout para los archivos de factura y guía
+        file_labels_layout = QHBoxLayout()
+        file_labels_layout.addWidget(factura_label)
+        file_labels_layout.addWidget(self.factura_file_label)
+        file_labels_layout.addWidget(subir_factura_button)
+        file_labels_layout.addWidget(guia_label)
+        file_labels_layout.addWidget(self.guia_file_label)
+        file_labels_layout.addWidget(subir_guia_button)
+        layout.addLayout(file_labels_layout)
 
-        fecha_actual = datetime.now().strftime("%d/%m/%Y")
-        fecha_var = tk.StringVar(value=fecha_actual)
-        date_picker = DateEntry(frame, textvariable=fecha_var, date_pattern="dd/mm/yyyy")
-        date_picker.pack(side="left")
-        date_picker.bind("<<DateEntrySelected>>", self.date_changed)
+        # Layout para los botones de aceptar y cancelar
+        buttons_layout = QHBoxLayout()
+        buttons_layout.addWidget(cancelar_button)  # Botón cancelar a la izquierda
+        buttons_layout.addWidget(aceptar_button)  # Botón aceptar a la derecha
+        buttons_layout.setAlignment(Qt.AlignCenter)
+        layout.addLayout(buttons_layout)
 
-        return frame
+        self.setLayout(layout)
 
-    def crear_frame_archivo(self, container, label_text, command_func, file_name_var):
-        frame = tk.Frame(container)
-        label = tk.Label(frame, text=label_text, width=20, anchor="e")
-        label.pack(side="left", padx=5)
-
-        upload_button = tk.Button(frame, text="Subir archivo", command=lambda: command_func(file_name_var))
-        upload_button.pack(side="left")
-
-        return frame
-
-    def posicionar_frames(self, container):
-        for i, frame in enumerate(self.frames):
-            row, col = divmod(i, 3)
-            frame.grid(row=row, column=col, padx=10, pady=(screen_height - 600) // 2, sticky="nsew")
-
-        self.file_label_guia = tk.Label(container, text="", wraplength=200)
-        self.file_label_guia.grid(row=2, column=0, columnspan=2, pady=(5, 0))
-
-        self.file_label_factura = tk.Label(container, text="", wraplength=200)
-        self.file_label_factura.grid(row=2, column=1, columnspan=2, pady=(5, 0))
-
-        tk.Label(container).grid(row=3, column=0, columnspan=3, pady=(5, 0))
-            
-        container.grid_columnconfigure(0, weight=1)
-        container.grid_columnconfigure(1, weight=1)
-
-    def crear_botones(self, container):
-        button_frame = tk.Frame(self.root)
-        button_frame.pack(side="bottom", padx=10, pady=(10, 100))
-
-        cancel_button = tk.Button(button_frame, text="Cancelar", command=self.cancel, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
-        cancel_button.pack(side="left", padx=50)
-
-        continue_button = tk.Button(button_frame, text="Continuar", command=self.continue_form, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
-        continue_button.pack(side="right", padx=50)
-
-    def date_changed(self, event):
-        date_picker = event.widget
-        date = date_picker.get_date()
-        fecha_formato_deseado = date.strftime("%d/%m/%Y")
-        date_picker.set_date(fecha_formato_deseado)
-
-    def upload_file(self, file_name_var):
-        file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
-        if file_path and file_path.lower().endswith(".pdf"):
-            file_name = os.path.basename(file_path)
-            file_name_var.set(file_name)
-            self.file_label_guia.config(text=f"Nombre de la guía: {file_name}")
-            self.file_path_guia = file_path
-            
-
-    def upload_file2(self, file_name_var):
-        file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
-        if file_path and file_path.lower().endswith(".pdf"):
-            file_name = os.path.basename(file_path)
-            file_name_var.set(file_name)
-            self.file_label_factura.config(text=f"Nombre de la factura: {file_name}")
-            self.file_path_factura = file_path
-
-    def mostrar_ingresar_nuevo(self):
-        self.root.mainloop()
-        
-    def cancel(self):
-        self.root.withdraw()
-        self.controller.mostrar_opciones()
-
-    def continue_form(self):
-        if not self.validar_formulario():
+    def validar_ingreso(self):
+        # Validar que todos los campos estén llenos
+        if (not self.numero_guia_entry.text().strip() or
+            not self.nombre_empresa_entry.text().strip() or
+            not self.fecha_picker.date().isValid() or
+            not self.cantidad_productos_entry.text().strip() or
+            not self.factura_file_label.text().strip() or
+            not self.guia_file_label.text().strip()):
+            QMessageBox.warning(self, "Error", "Llene todos los campos")
             return
-        print("Ruta de la guía:", self.file_path_guia)
-        print("Ruta de la factura:", self.file_path_factura)
-        self.guardar_datos()
-        self.root.withdraw()
-        self.controller.mostrar_ingreso_producto()
 
-    def validar_formulario(self):
-        for frame in self.frames:
-            if isinstance(frame.winfo_children()[1], tk.Entry):
-                entry = frame.winfo_children()[1]
-                if not entry.get().strip():
-                    messagebox.showerror("Error", "Por favor, complete todos los campos.")
-                    return False
-        if not (self.file_name_guia.get() and self.file_name_factura.get()):
-            messagebox.showerror("Error", "Por favor, suba tanto la guía como la factura.")
-            return False
-        cantidad_productos = self.frames[3].winfo_children()[1].get().strip()
-        if not cantidad_productos.isnumeric() or int(cantidad_productos) <= 0:
-            messagebox.showerror("Error", "Por favor, ingrese una cantidad de productos válida (mayor a 0).")
-            return False
+        # Validar la fecha
+        if self.fecha_picker.date().toPyDate() < QDate(2022, 1, 1).toPyDate():
+            QMessageBox.warning(self, "Error", "Fecha ingresada incorrecta")
+            return
+
+        # Validar la cantidad de productos
+        cantidad_productos = self.cantidad_productos_entry.text()
+        if not cantidad_productos.isdigit() or not (1 <= int(cantidad_productos) <= 99):
+            QMessageBox.warning(self, "Error", "Ingrese un número correcto en la cantidad de productos")
+            return
+
+        # Validar si se han subido guía y factura
+        if self.factura_file_label.text() == self.guia_file_label.text():
+            QMessageBox.warning(self, "Error", "Guía y factura deben ser diferentes")
+            return
+
         return True
 
-    def guardar_datos(self):
-        numero_guia = self.frames[0].winfo_children()[1].get().strip()
-        nombre_empresa = self.frames[1].winfo_children()[1].get().strip()
-        fecha = self.frames[2].winfo_children()[1].get().strip()
-        cantidad_productos = self.frames[3].winfo_children()[1].get().strip()
-        file_name_guia = self.file_name_guia.get().strip()
-        file_name_factura = self.file_name_factura.get().strip()
-        file_path_guia = self.file_path_guia
-        file_path_factura = self.file_path_factura
+    def continuar_ingreso(self):
+        # Validar ingreso antes de continuar
+        if not self.validar_ingreso():
+            return
 
-        self.data_manager = DataManager.get_instance()
-        self.data_manager.set_data(
-            numero_guia,
-            nombre_empresa,
-            fecha,
-            cantidad_productos,
-            file_name_guia,
-            file_name_factura,
-            file_path_guia,
-            file_path_factura
+        # Guardar datos en el DataManager
+        data_manager = DataManager.get_instance()
+        data_manager.guardar_datos_ingreso_nuevo(
+            numero_guia=self.numero_guia_entry.text(),
+            nombre_empresa=self.nombre_empresa_entry.text(),
+            fecha=self.fecha_picker.date().toString("dd/MM/yyyy"),
+            cantidad_productos=self.cantidad_productos_entry.text(),
+            file_name_guia=self.guia_filename,
+            file_name_factura=self.factura_filename,
+            file_path_guia=self.guia_file_label.text(),
+            file_path_factura=self.factura_file_label.text()
         )
+
+        # Imprimir los datos por consola
+        print("Número de Guía:", self.numero_guia_entry.text())
+        print("Nombre de Empresa:", self.nombre_empresa_entry.text())
+        print("Fecha:", self.fecha_picker.date().toString("dd/MM/yyyy"))
+        print("Cantidad de Productos:", self.cantidad_productos_entry.text())
+        print("Archivo Factura:", self.factura_filename)  # Imprimir solo el nombre del PDF
+        print("Archivo Guía:", self.guia_filename)  # Imprimir solo el nombre del PDF
+
+        # Cerrar esta ventana y abrir la siguiente
+        self.close()
+        self.controller.mostrar_ingreso_producto()
+
+    def upload_factura(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "Seleccionar Factura", "", "Archivos PDF (*.pdf)")
+        if filename:
+            self.factura_file_label.setText(os.path.basename(filename))  # Mostrar solo el nombre del archivo
+            self.factura_filename = os.path.basename(filename)  # Guardar el nombre del PDF
+
+    def upload_guia(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "Seleccionar Guía", "", "Archivos PDF (*.pdf)")
+        if filename:
+            self.guia_file_label.setText(os.path.basename(filename))  # Mostrar solo el nombre del archivo
+            self.guia_filename = os.path.basename(filename)  # Guardar el nombre del PDF
+
+    def set_controller(self, controller):
+        self.controller = controller
+
+    def cancelar(self):
+        self.close()
+        self.controller.mostrar_opciones()
