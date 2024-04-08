@@ -1,10 +1,8 @@
-# main.py
-
+import sys
+from PyQt5.QtWidgets import QApplication
 from app.controllers.app_controller import AppController
 
-def main():
-    app_controller = AppController()
-    app_controller.start()
-
 if __name__ == "__main__":
-    main()
+    app = QApplication(sys.argv)
+    controller = AppController()
+    sys.exit(app.exec_())
