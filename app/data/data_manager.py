@@ -30,6 +30,9 @@ class DataManager:
             self.data.get('ruta_factura')
         )
 
+    def obtener_cantidad_productos(self):
+        return self.data.get('cantidad_productos')
+
     @classmethod
     def get_instance(cls):
         if cls._instance is None:
