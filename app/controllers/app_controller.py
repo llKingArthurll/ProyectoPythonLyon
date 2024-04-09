@@ -2,6 +2,7 @@ from app.views.bienvenida_view import BienvenidaView
 from app.views.opciones_view import OpcionesView
 from app.views.ingresar_nuevo_view import IngresarNuevoView
 from app.views.ingreso_producto_view import IngresoProductoView
+from app.views.agregar_serie_view import AgregarSerieView
 
 class AppController:
     def __init__(self):
@@ -34,8 +35,14 @@ class AppController:
     def mostrar_ingreso_producto(self):
         if self.ingreso_producto_view:
             self.ingreso_producto_view.close()
-        self.ingreso_producto_view = IngresoProductoView()
-        self.ingreso_producto_view.exec_()
+        self.ingreso_producto_view = IngresoProductoView(self)
+        self.ingreso_producto_view.show()
+
+    def mostrar_agregar_serie(self, entry):
+        if self.agregar_serie_view:
+            self.agregar_serie_view.close()
+        self.agregar_serie_view = AgregarSerieView()
+        self.agregar_serie_view.exec_()
 
 # # app/controllers/app_controller.py
 # import tkinter as tk

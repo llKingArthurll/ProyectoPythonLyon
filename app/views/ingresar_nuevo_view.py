@@ -121,11 +121,14 @@ class IngresarNuevoView(QDialog):
         self.setLayout(layout)
 
     def validar_ingreso(self):
+        # Limpiar espacios en blanco del texto ingresado en el campo de cantidad
+        cantidad_texto = self.cantidad_productos_entry.text().strip()
+
         # Validar que todos los campos estén llenos
         if (not self.numero_guia_entry.text().strip() or
             not self.nombre_empresa_entry.text().strip() or
             not self.fecha_picker.date().isValid() or
-            not self.cantidad_productos_entry.text().strip() or
+            not cantidad_texto or  # Utilizar el texto limpio en la validación
             not self.factura_file_label.text().strip() or
             not self.guia_file_label.text().strip()):
             QMessageBox.warning(self, "Error", "Llene todos los campos")
@@ -137,8 +140,7 @@ class IngresarNuevoView(QDialog):
             return
 
         # Validar la cantidad de productos
-        cantidad_productos = self.cantidad_productos_entry.text()
-        if not cantidad_productos.isdigit() or not (1 <= int(cantidad_productos) <= 99):
+        if not cantidad_texto.isdigit() or not (1 <= int(cantidad_texto) <= 99):
             QMessageBox.warning(self, "Error", "Ingrese un número correcto en la cantidad de productos")
             return
 
@@ -154,26 +156,27 @@ class IngresarNuevoView(QDialog):
         if not self.validar_ingreso():
             return
 
+        # Limpiar espacios en blanco del texto ingresado en el campo de cantidad
+        cantidad_texto = self.cantidad_productos_entry.text().strip()
+        
         # Guardar datos en el DataManager
         data_manager = DataManager.get_instance()
         data_manager.guardar_datos_ingreso_nuevo(
             numero_guia=self.numero_guia_entry.text(),
             nombre_empresa=self.nombre_empresa_entry.text(),
             fecha=self.fecha_picker.date().toString("dd/MM/yyyy"),
-            cantidad_productos=self.cantidad_productos_entry.text(),
-            file_name_guia=self.guia_filename,
-            file_name_factura=self.factura_filename,
-            file_path_guia=self.guia_file_label.text(),
-            file_path_factura=self.factura_file_label.text()
+            cantidad_productos=cantidad_texto,
+            ruta_guia=self.guia_file_label.text(),  # Cambiado a ruta de guía
+            ruta_factura=self.factura_file_label.text()  # Cambiado a ruta de factura
         )
 
         # Imprimir los datos por consola
         print("Número de Guía:", self.numero_guia_entry.text())
         print("Nombre de Empresa:", self.nombre_empresa_entry.text())
         print("Fecha:", self.fecha_picker.date().toString("dd/MM/yyyy"))
-        print("Cantidad de Productos:", self.cantidad_productos_entry.text())
-        print("Archivo Factura:", self.factura_filename)  # Imprimir solo el nombre del PDF
-        print("Archivo Guía:", self.guia_filename)  # Imprimir solo el nombre del PDF
+        print("Cantidad de Productos:", cantidad_texto)
+        print("Ruta Factura Completa:", self.factura_filename)
+        print("Ruta Guía Completa:", self.guia_filename)
 
         # Cerrar esta ventana y abrir la siguiente
         self.close()
@@ -183,13 +186,13 @@ class IngresarNuevoView(QDialog):
         filename, _ = QFileDialog.getOpenFileName(self, "Seleccionar Factura", "", "Archivos PDF (*.pdf)")
         if filename:
             self.factura_file_label.setText(os.path.basename(filename))  # Mostrar solo el nombre del archivo
-            self.factura_filename = os.path.basename(filename)  # Guardar el nombre del PDF
+            self.factura_filename = filename  # Guardar la ruta completa del PDF
 
     def upload_guia(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Seleccionar Guía", "", "Archivos PDF (*.pdf)")
         if filename:
             self.guia_file_label.setText(os.path.basename(filename))  # Mostrar solo el nombre del archivo
-            self.guia_filename = os.path.basename(filename)  # Guardar el nombre del PDF
+            self.guia_filename = filename  # Guardar la ruta completa del PDF
 
     def set_controller(self, controller):
         self.controller = controller

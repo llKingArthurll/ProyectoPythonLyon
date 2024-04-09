@@ -1,47 +1,47 @@
-import tkinter as tk
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout
 
-class AgregarSerieView:
-    def __init__(self, root, entry_target, parent_view):
-        self.root = root
+class AgregarSerieView(QDialog):
+    def __init__(self, entry_target, parent_view):
+        super().__init__()
         self.entry_target = entry_target
         self.parent_view = parent_view
-        self.root.title("Agregar Serie")
-        self.root.geometry("350x130")
-        self.root.resizable(width=False, height=False)
+        self.setWindowTitle("Agregar Serie")
+        self.initUI()
 
-        label = tk.Label(self.root, text="Agregar Serie:")
-        label.pack(pady=10)
+    def initUI(self):
+        layout = QVBoxLayout()
+        self.setLayout(layout)
 
-        self.entry_serie = tk.Entry(self.root, width=30)
-        self.entry_serie.pack(pady=10)
-        self.entry_serie.focus_set()
+        label = QLabel("Agregar Serie:")
+        layout.addWidget(label)
 
-        button_container = tk.Frame(self.root)
-        button_container.pack(pady=5)
+        self.entry_serie = QLineEdit()
+        layout.addWidget(self.entry_serie)
+        self.entry_serie.setFocus()
 
-        button_agregar = tk.Button(button_container, text="Agregar", command=self.agregar_serie, width=10)
-        button_agregar.pack(side="left", padx=5)
+        button_container = QHBoxLayout()
+        layout.addLayout(button_container)
 
-        button_listo = tk.Button(button_container, text="Listo", command=self.cerrar_ventana, width=10)
-        button_listo.pack(side="left", padx=5)
+        button_agregar = QPushButton("Agregar")
+        button_agregar.clicked.connect(self.agregar_serie)
+        button_container.addWidget(button_agregar)
+
+        button_listo = QPushButton("Listo")
+        button_listo.clicked.connect(self.cerrar_ventana)
+        button_container.addWidget(button_listo)
 
         # Vincular el evento de presionar Enter al método agregar_serie
-        self.entry_serie.bind("<Return>", lambda event: self.agregar_serie())
+        self.entry_serie.returnPressed.connect(self.agregar_serie)
 
     def agregar_serie(self):
-        if not self.root.winfo_exists():
-            return
-        serie = self.entry_serie.get()
+        serie = self.entry_serie.text()
 
         if serie:
-            entry_target_value = self.entry_target.get()
+            entry_target_value = self.entry_target.toPlainText()
             nueva_serie = f"{entry_target_value}, {serie}" if entry_target_value else serie
-            self.entry_target.config(state="normal")
-            self.entry_target.delete(0, "end")
-            self.entry_target.insert(0, nueva_serie)
-            self.entry_target.config(state="disabled")
-            self.entry_serie.delete(0, tk.END)
-            self.entry_serie.focus_set()
+            self.entry_target.setPlainText(nueva_serie)
+            self.entry_serie.clear()
+            self.entry_serie.setFocus()
 
     def cerrar_ventana(self):
-        self.root.destroy()
+        self.accept()
