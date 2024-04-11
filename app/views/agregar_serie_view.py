@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout
+from PyQt5.QtGui import QIcon
 
 class AgregarSerieView(QDialog):
     def __init__(self, entry_target, parent_view):
@@ -6,6 +7,7 @@ class AgregarSerieView(QDialog):
         self.entry_target = entry_target
         self.parent_view = parent_view
         self.setWindowTitle("Agregar Serie")
+        self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
         self.initUI()
 
     def initUI(self):
@@ -37,9 +39,9 @@ class AgregarSerieView(QDialog):
         serie = self.entry_serie.text()
 
         if serie:
-            entry_target_value = self.entry_target.toPlainText()
+            entry_target_value = self.entry_target.text()
             nueva_serie = f"{entry_target_value}, {serie}" if entry_target_value else serie
-            self.entry_target.setPlainText(nueva_serie)
+            self.entry_target.setText(nueva_serie)
             self.entry_serie.clear()
             self.entry_serie.setFocus()
 

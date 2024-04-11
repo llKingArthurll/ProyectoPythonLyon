@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout, QPushButton, QApplication
+from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout, QPushButton, QApplication, QHBoxLayout
 from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtCore import Qt
 
@@ -11,8 +11,7 @@ class BienvenidaView(QDialog):
         width, height = screen_resolution.width(), screen_resolution.height()
 
         self.setWindowTitle("LYON SYSTEM")
-        self.setGeometry(0, 0, width, height)  # Establecer tamaño de ventana como la resolución de la pantalla
-
+        self.setGeometry(0, 0, width, height)
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
 
         self.title_label = QLabel("Bienvenido(a) al Sistema", self)
@@ -29,6 +28,7 @@ class BienvenidaView(QDialog):
         self.imagen_label.setMargin(10)
 
         self.continuar_button = QPushButton("Continuar", self)
+        self.continuar_button.setFixedWidth(200)
         self.continuar_button.setStyleSheet("""
             QPushButton {
                 background-color: #FE6E0C;
@@ -41,16 +41,23 @@ class BienvenidaView(QDialog):
                 background-color: #FF7F50;
             }
         """)
-        self.continuar_button.clicked.connect(self.continuar_presionado)
+        self.continuar_button.clicked.connect(self.continuar)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.title_label)
-        layout.addWidget(self.imagen_label)
-        layout.addWidget(self.continuar_button)
-        layout.setAlignment(Qt.AlignCenter)
-        self.setLayout(layout)
+        # Crear un layout horizontal para el botón
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.continuar_button)
+        button_layout.setAlignment(Qt.AlignCenter)
 
-    def continuar_presionado(self):
+        # Crear un layout vertical para todos los widgets
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(self.title_label)
+        main_layout.addWidget(self.imagen_label)
+        main_layout.addLayout(button_layout)
+        main_layout.setAlignment(Qt.AlignCenter)
+
+        self.setLayout(main_layout)
+
+    def continuar(self):
         print("Se cambió de pantalla a Opciones")
         self.close()
         self.controller.mostrar_opciones()

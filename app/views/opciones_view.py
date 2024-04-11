@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QPushButton, QHBoxLayout
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt, QSize
 
 class OpcionesView(QDialog):
@@ -22,6 +22,7 @@ class OpcionesView(QDialog):
         self.buscar_producto_button.setIcon(QIcon("resources/Busqueda.png"))
         self.buscar_producto_button.setIconSize(QSize(100, 100))
         self.buscar_producto_button.setText("BUSCAR PRODUCTO")
+        self.buscar_producto_button.setFixedSize(300, 200)
         self.buscar_producto_button.clicked.connect(self.buscar_producto)
         self.buscar_producto_button.setStyleSheet("""
             QPushButton {
@@ -29,6 +30,9 @@ class OpcionesView(QDialog):
                 color: white;
                 padding: 20px;
                 border-radius: 10px;
+                text-align: center;
+                margin-left: 20px;
+                margin-right: 20px;
             }
             QPushButton:hover {
                 background-color: #FF7F50;
@@ -39,6 +43,7 @@ class OpcionesView(QDialog):
         self.ingresar_nuevo_button.setIcon(QIcon("resources/IngresoGuia.png"))
         self.ingresar_nuevo_button.setIconSize(QSize(100, 100))
         self.ingresar_nuevo_button.setText("INGRESAR NUEVO")
+        self.ingresar_nuevo_button.setFixedSize(300, 200)
         self.ingresar_nuevo_button.clicked.connect(self.ingresar_nuevo)
         self.ingresar_nuevo_button.setStyleSheet("""
             QPushButton {
@@ -46,20 +51,27 @@ class OpcionesView(QDialog):
                 color: white;
                 padding: 20px;
                 border-radius: 10px;
+                text-align: center;
+                margin-left: 20px;
+                margin-right: 20px;
             }
             QPushButton:hover {
                 background-color: #FF7F50;
             }
         """)
 
-        self.cerrar_button = QPushButton("Cerrar", self)
-        self.cerrar_button.clicked.connect(self.cerrar_ventana)
+        self.cerrar_button = QPushButton("Salir", self)
+        self.cerrar_button.setFixedWidth(150)
+        self.cerrar_button.clicked.connect(self.salir)
         self.cerrar_button.setStyleSheet("""
             QPushButton {
                 background-color: #FE6E0C;
                 color: white;
                 padding: 10px;
                 border-radius: 5px;
+                margin-top: 50px;
+                margin-left: 20px;
+                margin-right: 20px;
             }
             QPushButton:hover {
                 background-color: #FF7F50;
@@ -69,14 +81,23 @@ class OpcionesView(QDialog):
         layout = QVBoxLayout()
         layout.addWidget(self.label)
 
-        buttons_layout = QHBoxLayout()
-        buttons_layout.addWidget(self.buscar_producto_button)
-        buttons_layout.addWidget(self.ingresar_nuevo_button)
-        layout.addLayout(buttons_layout)
+        # Layout vertical para el botón de buscar producto
+        buscar_layout = QVBoxLayout()
+        buscar_layout.addWidget(self.buscar_producto_button)
+        buscar_layout.setAlignment(Qt.AlignCenter)
+
+        # Layout vertical para el botón de ingresar nuevo
+        ingresar_layout = QVBoxLayout()
+        ingresar_layout.addWidget(self.ingresar_nuevo_button)
+        ingresar_layout.setAlignment(Qt.AlignCenter)
+
+        buttons_layout = QHBoxLayout()  # Crea un diseño horizontal para los botones
+        buttons_layout.addLayout(buscar_layout)
+        buttons_layout.addLayout(ingresar_layout)
+        layout.addLayout(buttons_layout)  # Agrega el diseño horizontal al diseño vertical
 
         bottom_layout = QHBoxLayout()
-        bottom_layout.addStretch(1)
-        bottom_layout.addWidget(self.cerrar_button)
+        bottom_layout.addWidget(self.cerrar_button)  # El botón de salir estará centrado horizontalmente
         layout.addLayout(bottom_layout)
 
         layout.setAlignment(Qt.AlignCenter)
@@ -93,6 +114,5 @@ class OpcionesView(QDialog):
         print("Ingresar productos")
         self.controller.mostrar_ingresar_nuevo()
 
-    def cerrar_ventana(self):
+    def salir(self):
         self.close()
-        self.controller.show_bienvenida()
