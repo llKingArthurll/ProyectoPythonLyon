@@ -8,7 +8,7 @@ class IngresarNuevoView(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Ingresando nueva guía")
-        self.setWindowIcon(QIcon("resources/LogoLyon.ico"))  # Establecer el ícono de la ventana
+        self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
         self.initUI()
 
     def initUI(self):
@@ -166,8 +166,8 @@ class IngresarNuevoView(QDialog):
             nombre_empresa=self.nombre_empresa_entry.text(),
             fecha=self.fecha_picker.date().toString("dd/MM/yyyy"),
             cantidad_productos=cantidad_texto,
-            ruta_guia=self.guia_file_label.text(),  # Cambiado a ruta de guía
-            ruta_factura=self.factura_file_label.text()  # Cambiado a ruta de factura
+            ruta_guia=self.guia_file_label.text(),
+            ruta_factura=self.factura_file_label.text()
         )
 
         # Imprimir los datos por consola
@@ -185,14 +185,14 @@ class IngresarNuevoView(QDialog):
     def upload_factura(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Seleccionar Factura", "", "Archivos PDF (*.pdf)")
         if filename:
-            self.factura_file_label.setText(os.path.basename(filename))  # Mostrar solo el nombre del archivo
-            self.factura_filename = filename  # Guardar la ruta completa del PDF
+            self.factura_file_label.setText(os.path.basename(filename))
+            self.factura_filename = filename
 
     def upload_guia(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Seleccionar Guía", "", "Archivos PDF (*.pdf)")
         if filename:
-            self.guia_file_label.setText(os.path.basename(filename))  # Mostrar solo el nombre del archivo
-            self.guia_filename = filename  # Guardar la ruta completa del PDF
+            self.guia_file_label.setText(os.path.basename(filename))
+            self.guia_filename = filename
 
     def set_controller(self, controller):
         self.controller = controller

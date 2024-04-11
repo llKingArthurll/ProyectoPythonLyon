@@ -1,144 +1,88 @@
-import tkinter as tk
-from tkinter import ttk
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QTime
+from PyQt5.QtCore import Qt
 from app.data.data_manager import DataManager
-from app.data.db_connection import DatabaseConnection
-from app.data.db_queries import DatabaseQueries
-from PIL import Image, ImageTk
 
-class ResumenProductosView:
-    def __init__(self, root, controller):
-        self.root = root
-        self.controller = controller
-        self.root.title("Resumen de Productos")
-        self.root.geometry("400x600")
-        self.root.resizable(True, True)
-        self.root.iconbitmap("resources/LogoLyon.ico")
+class ResumenProductoView(QDialog):
+    def __init__(self, controller=None):
+        super().__init__()
+        self.setWindowTitle("Resumen de Productos")
+        self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
+        self.setFixedSize(800, 600)
+        self.initUI()
 
-        # Inicializar productos
-        self.inicializar_productos()
+    def initUI(self):
+        layout = QVBoxLayout()
+        self.setLayout(layout)
 
-        self.label = tk.Label(root, text="¡Bienvenido a Resumen!", font=("Arial", 15, "bold"))
-        self.label.pack(pady=20)
+        # Título centrado para el resumen
+        resumen_label = QLabel("Resumen de lo ingresado")
+        resumen_label.setAlignment(Qt.AlignCenter)
+        resumen_label.setStyleSheet("font-size: 20pt; font-weight: bold;")
+        layout.addWidget(resumen_label)
 
-        self.scroll_frame = tk.Frame(root)
-        self.scroll_frame.pack(fill="both", expand=True)
+        # Obtener los datos del DataManager
+        numero_guia = DataManager.get_instance().obtener_numero_guia()
+        nombre_empresa = DataManager.get_instance().obtener_nombre_empresa()
+        fecha = DataManager.get_instance().obtener_fecha()
+        cantidad_productos = DataManager.get_instance().obtener_cantidad_productos()
+        productos = DataManager.get_instance().obtener_productos_con_series()
 
-        self.canvas = tk.Canvas(self.scroll_frame)
-        self.canvas.pack(side="left", fill="both", expand=True)
+        # Mostrar los datos en QLabel
+        numero_guia_label = QLabel(f"Número de Guía: {numero_guia}")
+        layout.addWidget(numero_guia_label)
 
-        self.scrollbar = ttk.Scrollbar(self.scroll_frame, orient="vertical", command=self.canvas.yview)
-        self.scrollbar.pack(side="right", fill="y")
-        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        nombre_empresa_label = QLabel(f"Nombre de Empresa: {nombre_empresa}")
+        layout.addWidget(nombre_empresa_label)
 
-        self.inner_frame = tk.Frame(self.canvas)
-        self.inner_frame_id = self.canvas.create_window((0, 0), window=self.inner_frame, anchor="nw")
+        fecha_label = QLabel(f"Fecha: {fecha}")
+        layout.addWidget(fecha_label)
 
-        self.productos_labels = []
+        cantidad_productos_label = QLabel(f"Cantidad de Productos: {cantidad_productos}")
+        layout.addWidget(cantidad_productos_label)
 
-        self.mostrar_datos()
+        # Mostrar los productos ingresados con sus series
+        if productos:
+            for producto in productos:
+                nombre_producto = producto['nombre']
+                series = producto['series']
 
-        self.inner_frame.bind("<Configure>", self.on_frame_configure)
-        self.canvas.bind("<Configure>", self.on_canvas_configure)
+                # Mostrar nombre del producto
+                producto_label = QLabel(f"Producto: {nombre_producto}")
+                layout.addWidget(producto_label)
 
-        self.botones_frame = tk.Frame(root)
-        self.botones_frame.pack(pady=10)
+                # Mostrar series asociadas al producto
+                for serie in series:
+                    serie_label = QLabel(f"Serie: {serie}")
+                    layout.addWidget(serie_label)
 
-        self.cancelar_button = tk.Button(self.botones_frame, text="Cancelar", command=self.cancelar, width=14, bg="#215B6F",fg="white", font=("Arial", 8))
-        self.cancelar_button.pack(side="left", padx=10)
+        # Botones de continuar y cancelar
+        botones_layout = QHBoxLayout()
+        layout.addLayout(botones_layout)
 
-        self.guardar_button = tk.Button(self.botones_frame, text="Guardar", command=self.guardar, width=14, bg="#215B6F",fg="white", font=("Arial", 8))
-        self.guardar_button.pack(side="left", padx=10)
+        cancelar_button = QPushButton("Cancelar")
+        cancelar_button.clicked.connect(self.cancelar)
+        botones_layout.addWidget(cancelar_button)
 
-    def inicializar_productos(self):
-        self.productos = []
+        continuar_button = QPushButton("Continuar")
+        continuar_button.clicked.connect(self.continuar)
+        botones_layout.addWidget(continuar_button)
 
-    def mostrar_datos(self):
-        data_manager = DataManager.get_instance()
-        numero_guia = data_manager.get_numero_guia()
-        nombre_empresa = data_manager.get_nombre_empresa()
-        fecha = data_manager.get_fecha()
-        cantidad_productos = data_manager.get_cantidad_productos()
-        ingreso_producto_data = data_manager.get_ingreso_producto_data()
-
-        self.mostrar_par_de_datos("Número de Guía:", numero_guia)
-        self.mostrar_par_de_datos("Nombre de la Empresa:", nombre_empresa)
-        self.mostrar_par_de_datos("Fecha:", fecha)
-        self.mostrar_par_de_datos("Cantidad de Productos:", cantidad_productos)
-
-        for i, producto_data in enumerate(ingreso_producto_data, start=1):
-            self.mostrar_label(f"\nProducto {i}:")
-            self.mostrar_par_de_datos("Nombre del producto:", producto_data[0])
-            self.mostrar_par_de_datos("Descripción del producto:", producto_data[1])
-            
-            # Reemplazar espacios en blanco por saltos de línea en las series
-            series = producto_data[2].replace(' ', '\n')
-            self.mostrar_par_de_datos("Series del producto:", series)
-
-    def mostrar_par_de_datos(self, nombre, valor):
-        frame = tk.Frame(self.inner_frame)
-        frame.pack(fill="x")
-
-        label_nombre = tk.Label(frame, text=nombre, anchor="e", width=20)
-        label_nombre.pack(side="left", padx=(10, 5))
-
-        label_valor = tk.Label(frame, text=valor, anchor="w")
-        label_valor.pack(side="left")
-
-    def mostrar_resumen_view(self):
-        self.root.mainloop()
-
-    def mostrar_label(self, text):
-        label = tk.Label(self.inner_frame, text=text)
-        label.pack(pady=5)
-        self.productos_labels.append(label)
-
+    def mostrar_hora_actual(self):
+        hora_actual = QTime.currentTime()
+        hora_formateada = hora_actual.toString("hh:mm:ss:zzz")
+        print(f"Hora actual: {hora_formateada}")
+    
     def cancelar(self):
-        self.root.destroy()
+        self.close()
         if self.controller:
             self.controller.mostrar_ingresar_nuevo()
 
-    def guardar(self):
-        data_manager = DataManager.get_instance()
-        db_queries = DatabaseQueries(DatabaseConnection())
+    def continuar(self):
+        self.mostrar_hora_actual()
+        # if self.controller:
+        #     self.controller.continuar_proceso()
 
-        # Obtén los datos del DataManager
-        numero_guia = data_manager.get_numero_guia()
-        nombre_empresa = data_manager.get_nombre_empresa()
-        cantidad_productos = data_manager.get_cantidad_productos()
-        fecha_guia = data_manager.get_fecha()
-        save_data = data_manager.get_fecha_actual()
-        path_guia = "Insertar guías aquí"
-        path_factura = "Insertar facturas aquí"
-
-        # Obtén los detalles de los productos
-        productos_data = data_manager.get_ingreso_producto_data()
-        nombres_productos = [producto[0] for producto in productos_data]
-        descripciones_productos = [producto[1] for producto in productos_data]
-        series_productos = [producto[2] for producto in productos_data]
-
-        # Convierte las listas en strings separados por comas
-        nombre_producto_str = ",".join(nombres_productos)
-        descripcion_producto_str = ",".join(descripciones_productos)
-        series_producto_str = ",".join(series_productos)
-
-        # Limpia los datos del DataManager
-        data_manager.clear_data()
-
-        # Inserta en la tabla 'nuevo_registro'
-        db_queries.insert_nuevo_registro((
-            numero_guia, nombre_empresa, cantidad_productos, fecha_guia, save_data, path_guia, path_factura,
-            nombre_producto_str, descripcion_producto_str, series_producto_str
-        ))
-
-        # Cierra la conexión
-        db_queries.db_connection.close_connection()
-        print("¡Datos guardados exitosamente!")
-        print(f"Se guardó satisfactoriamente el {save_data}")
-        print(f"La ruta de la factura es: {path_factura}")
-        print(f"La ruta de la guía es: {path_guia}")
-
-    def on_frame_configure(self, event):
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-    def on_canvas_configure(self, event):
-        self.canvas.itemconfig(self.inner_frame_id, width=event.width)
+    def set_controller(self, controller):
+        self.controller = controller
