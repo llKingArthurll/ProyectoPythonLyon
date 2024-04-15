@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QPushButton, QHBoxLayout
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt, QSize
+from app.config.screen_config import configuracion_window, configuracion_tamano_pantalla
 
 class OpcionesView(QDialog):
     def __init__(self):
@@ -91,13 +92,13 @@ class OpcionesView(QDialog):
         ingresar_layout.addWidget(self.ingresar_nuevo_button)
         ingresar_layout.setAlignment(Qt.AlignCenter)
 
-        buttons_layout = QHBoxLayout()  # Crea un diseño horizontal para los botones
+        buttons_layout = QHBoxLayout()
         buttons_layout.addLayout(buscar_layout)
         buttons_layout.addLayout(ingresar_layout)
-        layout.addLayout(buttons_layout)  # Agrega el diseño horizontal al diseño vertical
+        layout.addLayout(buttons_layout)
 
         bottom_layout = QHBoxLayout()
-        bottom_layout.addWidget(self.cerrar_button)  # El botón de salir estará centrado horizontalmente
+        bottom_layout.addWidget(self.cerrar_button)
         layout.addLayout(bottom_layout)
 
         layout.setAlignment(Qt.AlignCenter)
@@ -107,11 +108,10 @@ class OpcionesView(QDialog):
         self.controller = controller
 
     def buscar_producto(self):
-        print("Buscar productos")
-        # self.controller.mostrar_buscar_producto()
+        self.close()
+        self.controller.mostrar_buscar_producto()
 
     def ingresar_nuevo(self):
-        print("Ingresar productos")
         self.controller.mostrar_ingresar_nuevo()
 
     def salir(self):
