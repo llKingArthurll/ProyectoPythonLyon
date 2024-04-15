@@ -1,6 +1,6 @@
-from PyQt5 import QtWidgets, QtGui, QtCore, QtWebEngineWidgets
+from PyQt5 import QtWidgets, QtGui, QtCore
 from app.data.db_queries import DatabaseQueries
-import os
+import subprocess
 
 class BuscarProductoView(QtWidgets.QWidget):
     def __init__(self):
@@ -18,23 +18,27 @@ class BuscarProductoView(QtWidgets.QWidget):
         layout_principal.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignHCenter)
         self.setLayout(layout_principal)
 
+        # Layout para el título
         layout_titulo = QtWidgets.QHBoxLayout()
         titulo_label = QtWidgets.QLabel("Busca tu producto aquí")
         titulo_label.setFont(QtGui.QFont("Arial", 16, QtGui.QFont.Bold))
         layout_titulo.addWidget(titulo_label)
         layout_principal.addLayout(layout_titulo)
 
+        # Layout para la barra de búsqueda
         layout_busqueda = QtWidgets.QHBoxLayout()
         self.barra_busqueda = QtWidgets.QLineEdit()
         self.barra_busqueda.setPlaceholderText("Buscar producto...")
         self.barra_busqueda.setFixedWidth(800)
         layout_busqueda.addWidget(self.barra_busqueda)
         
+        # Botón de buscar
         boton_buscar = QtWidgets.QPushButton("Buscar")
         boton_buscar.setFixedWidth(150)
         boton_buscar.clicked.connect(self.buscar)
         layout_busqueda.addWidget(boton_buscar)
         
+        # Botón de borrar
         boton_borrar = QtWidgets.QPushButton("Borrar")
         boton_borrar.setFixedWidth(150)
         boton_borrar.clicked.connect(self.borrar)
@@ -44,6 +48,7 @@ class BuscarProductoView(QtWidgets.QWidget):
         layout_centrado_busqueda.addLayout(layout_busqueda)
         layout_principal.addLayout(layout_centrado_busqueda)
 
+        # Layout para la tabla
         layout_centro = QtWidgets.QHBoxLayout()
         layout_centro.setAlignment(QtCore.Qt.AlignCenter)
         self.tabla = QtWidgets.QTableWidget()
@@ -78,43 +83,30 @@ class BuscarProductoView(QtWidgets.QWidget):
             # Obtener las rutas de la guía y la factura
             ruta_guia = self.db_queries.obtener_ruta_guia_por_id(registro[0])
             ruta_factura = self.db_queries.obtener_ruta_factura_por_id(registro[0])
-            
-            # Crear texto con enlaces para Guía y Factura
-            enlace_guia = QtWidgets.QTableWidgetItem("Ver guía")
-            enlace_factura = QtWidgets.QTableWidgetItem("Ver factura")
 
-            # Añadir señales a los enlaces para abrir los archivos PDF
-            enlace_guia.setForeground(QtCore.Qt.blue)
-            enlace_factura.setForeground(QtCore.Qt.blue)
+            # Crear botones para ver Guía y Factura
+            boton_guia = QtWidgets.QPushButton("Ver Guía")
+            boton_guia.setStyleSheet("color: blue; text-decoration: underline;")
+            boton_guia.clicked.connect(lambda _, idx=registro[0]: self.abrir_pdf(idx, "guia"))
+            self.tabla.setCellWidget(i, 5, boton_guia)
             
-            # Establecer que las celdas sean seleccionables para detectar clics
-            self.tabla.setItem(i, 5, enlace_guia)
-            enlace_guia.setFlags(enlace_guia.flags() | QtCore.Qt.ItemIsSelectable)
-            
-            self.tabla.setItem(i, 6, enlace_factura)
-            enlace_factura.setFlags(enlace_factura.flags() | QtCore.Qt.ItemIsSelectable)
-            
-            # Conectar los enlaces a la función para abrir archivos
-            enlace_guia.setData(QtCore.Qt.UserRole, (registro[0], "guia"))
-            enlace_factura.setData(QtCore.Qt.UserRole, (registro[0], "factura"))
-            enlace_guia.clicked.connect(self.abrir_pdf)
-            enlace_factura.clicked.connect(self.abrir_pdf)
+            boton_factura = QtWidgets.QPushButton("Ver Factura")
+            boton_factura.setStyleSheet("color: blue; text-decoration: underline;")
+            boton_factura.clicked.connect(lambda _, idx=registro[0]: self.abrir_pdf(idx, "factura"))
+            self.tabla.setCellWidget(i, 6, boton_factura)
 
-    def abrir_pdf(self):
-        enlace = self.sender()
-        id_nuevo_ingreso, tipo_archivo = enlace.data(QtCore.Qt.UserRole)
-        
-        # Obtener la ruta de la guía o factura según corresponda
+    def abrir_pdf(self, id_nuevo_ingreso, tipo_archivo):
+        # Obtener la ruta del PDF según el tipo de archivo
         if tipo_archivo == "guia":
             ruta = self.db_queries.obtener_ruta_guia_por_id(id_nuevo_ingreso)
         else:
             ruta = self.db_queries.obtener_ruta_factura_por_id(id_nuevo_ingreso)
         
-        # Abrir el PDF en la ruta especificada
-        if ruta:
-            os.startfile(ruta)
-        else:
-            QtWidgets.QMessageBox.warning(self, "Advertencia", f"No se encontró ruta para {tipo_archivo}.")
+        # Imprimir la ruta en la consola
+        print(f"Ruta del archivo {tipo_archivo}: {ruta}")
+
+        # La función solo imprime la ruta por consola; no intenta abrir el archivo PDF.
+
 
     def abrir_ventana_seleccion(self):
         seleccion = self.tabla.selectedItems()
