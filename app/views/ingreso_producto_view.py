@@ -26,11 +26,15 @@ class IngresoProductoView(QDialog):
         cantidad_productos = DataManager.get_instance().obtener_cantidad_productos()
         cantidad_productos = int(cantidad_productos)
 
+        # Crear el área de desplazamiento para la lista de productos
         scroll_area = QScrollArea()
         scroll_widget = QWidget()
         scroll_layout = QVBoxLayout(scroll_widget)
+        
+        # Configura el layout dentro del área de desplazamiento para justificar hacia arriba
+        scroll_layout.setAlignment(Qt.AlignTop)
+        
         scroll_widget.setLayout(scroll_layout)
-
         scroll_area.setWidgetResizable(True)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -39,11 +43,13 @@ class IngresoProductoView(QDialog):
         layout.addWidget(scroll_area)
 
         for i in range(cantidad_productos):
+            # Configura cada producto con un layout vertical
             producto_layout = QVBoxLayout()
             producto_widget = QWidget()
             producto_widget.setObjectName(f"producto_widget_{i}")
             producto_widget.setLayout(producto_layout)
 
+            # Agregar etiquetas y campos de entrada para cada producto
             producto_label = QLabel(f"Producto {i + 1}:")
             producto_layout.addWidget(producto_label)
 
@@ -62,7 +68,7 @@ class IngresoProductoView(QDialog):
             producto_layout.addWidget(serie_label)
             producto_layout.addWidget(serie_entry)
 
-            # Botones de agregar y reestablecer serie
+            # Crear botones para agregar y reestablecer serie
             botones_layout = QHBoxLayout()
             producto_layout.addLayout(botones_layout)
 
@@ -76,8 +82,10 @@ class IngresoProductoView(QDialog):
             reestablecer_button.clicked.connect(lambda state, entry=serie_entry: self.reestablecer_serie(entry))
             botones_layout.addWidget(reestablecer_button)
 
+            # Agregar cada widget de producto al scroll_layout
             scroll_layout.addWidget(producto_widget)
 
+        # Crear botones de cancelar y continuar en la parte inferior
         botones_layout = QHBoxLayout()
         layout.addLayout(botones_layout)
 

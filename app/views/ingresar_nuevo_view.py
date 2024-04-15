@@ -166,8 +166,8 @@ class IngresarNuevoView(QDialog):
             nombre_empresa=self.nombre_empresa_entry.text(),
             fecha=self.fecha_picker.date().toString("dd/MM/yyyy"),
             cantidad_productos=cantidad_texto,
-            ruta_guia=self.guia_file_label.text(),
-            ruta_factura=self.factura_file_label.text()
+            ruta_guia=self.factura_filename,
+            ruta_factura=self.guia_filename
         )
 
         # Imprimir los datos por consola
