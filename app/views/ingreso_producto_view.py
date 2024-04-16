@@ -76,12 +76,35 @@ class IngresoProductoView(QDialog):
             agregar_button.setFixedWidth(150)
             agregar_button.clicked.connect(lambda state, entry=serie_entry: self.abrir_agregar_serie(entry))
             botones_layout.addWidget(agregar_button)
+            agregar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #BB7223;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)
 
             reestablecer_button = QPushButton("Reestablecer")
             reestablecer_button.setFixedWidth(150)
             reestablecer_button.clicked.connect(lambda state, entry=serie_entry: self.reestablecer_serie(entry))
             botones_layout.addWidget(reestablecer_button)
-
+            reestablecer_button.setStyleSheet("""
+            QPushButton {
+                background-color: #215B6F;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)
             # Agregar cada widget de producto al scroll_layout
             scroll_layout.addWidget(producto_widget)
 
@@ -92,10 +115,34 @@ class IngresoProductoView(QDialog):
         cancelar_button = QPushButton("Cancelar")
         cancelar_button.clicked.connect(self.cancelar)
         botones_layout.addWidget(cancelar_button)
+        cancelar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)
 
         continuar_button = QPushButton("Continuar")
         continuar_button.clicked.connect(self.continuar)
         botones_layout.addWidget(continuar_button)
+        continuar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)
 
     def cancelar(self):
         self.close()

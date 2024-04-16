@@ -78,8 +78,32 @@ class IngresarNuevoView(QDialog):
         # Botones de aceptar y cancelar
         aceptar_button = QPushButton("Continuar")
         aceptar_button.clicked.connect(self.continuar_ingreso)
+        aceptar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)
         cancelar_button = QPushButton("Cancelar")
         cancelar_button.clicked.connect(self.cancelar)
+        cancelar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)
 
         # Layout principal
         layout = QVBoxLayout()
