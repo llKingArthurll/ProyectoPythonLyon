@@ -2,11 +2,18 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from app.data.data_manager import DataManager
+<<<<<<< HEAD
+=======
+from app.views.agregar_serie_view import AgregarSerieView
+from PIL import Image, ImageTk
+
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
 class IngresoProductoView(QDialog):
     def __init__(self, controller=None):
         super().__init__()
         self.controller = controller
+<<<<<<< HEAD
         self.setWindowTitle("Ingreso de Producto")
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
         self.setFixedSize(800, 600)
@@ -14,14 +21,30 @@ class IngresoProductoView(QDialog):
 
     def set_controller(self, controller):
         self.controller = controller
+=======
+        self.agregar_serie_view_window = None
+        self.root.title("Ingreso de Producto")
+        self.root.geometry("615x500")
+        self.root.resizable(False, False)
+        self.root.iconbitmap("resources/LogoLyon.ico")
+        
+
+        self.label = tk.Label(root, text="Ingresa los datos de los productos", font=("Arial", 15, "bold"))
+        self.label.pack(pady=20)
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
     def initUI(self):
         layout = QVBoxLayout()
         self.setLayout(layout)
 
+<<<<<<< HEAD
         title_label = QLabel("Ingresa los datos de los productos")
         title_label.setStyleSheet("font-size: 15pt; font-weight: bold;")
         layout.addWidget(title_label)
+=======
+        cantidad_label = tk.Label(root, text=f"Cantidad de productos: {cantidad_productos}", font=("Arial", 12, "bold"))
+        cantidad_label.pack(pady=10)
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
         cantidad_productos = DataManager.get_instance().obtener_cantidad_productos()
         cantidad_productos = int(cantidad_productos)
@@ -72,6 +95,7 @@ class IngresoProductoView(QDialog):
             botones_layout = QHBoxLayout()
             producto_layout.addLayout(botones_layout)
 
+<<<<<<< HEAD
             agregar_button = QPushButton("Agregar")
             agregar_button.setFixedWidth(150)
             agregar_button.clicked.connect(lambda state, entry=serie_entry: self.abrir_agregar_serie(entry))
@@ -88,6 +112,10 @@ class IngresoProductoView(QDialog):
                 background-color: #FF7F50;
             }
         """)
+=======
+            label1 = tk.Label(frame_product, text=f"Producto {i}:", anchor="e", font=("Arial", 10, "bold"))
+            label1.grid(row=0, column=0, sticky="w", padx=(50, 5))
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
             reestablecer_button = QPushButton("Reestablecer")
             reestablecer_button.setFixedWidth(150)
@@ -128,6 +156,7 @@ class IngresoProductoView(QDialog):
             }
         """)
 
+<<<<<<< HEAD
         continuar_button = QPushButton("Continuar")
         continuar_button.clicked.connect(self.continuar)
         botones_layout.addWidget(continuar_button)
@@ -143,6 +172,44 @@ class IngresoProductoView(QDialog):
                 background-color: #FF7F50;
             }
         """)
+=======
+            entry3 = tk.Entry(frame_product, width=40)
+            entry3.grid(row=2, column=1, padx=(5, 10), pady=(5, 5))
+            entry3.insert(0, "Ingrese descripción")
+
+            label4 = tk.Label(frame_product, text="Series:", anchor="e")
+            label4.grid(row=3, column=0, sticky="w", padx=(50, 5), pady=(5, 5))
+
+            entry_series = tk.Entry(frame_product, width=40, state="readonly")
+            entry_series.grid(row=3, column=1, padx=(5, 10), pady=(5, 5))
+            entry_series.insert(0, "Ingrese series")
+
+            button_agregar_serie = tk.Button(frame_product, text="Agregar", command=lambda i=i, entry_series=entry_series: self.abrir_agregar_serie_view(entry_series), width=10, bg="#BB7223",fg="white", font=("Arial", 8))
+            button_agregar_serie.grid(row=2, column=2, padx=(5, 10), pady=(5, 5))
+
+            button_reestablecer_serie = tk.Button(frame_product, text="Reestablecer", command=lambda entry_series=entry_series: self.reestablecer_serie(entry_series), width=10, bg="#215B6F",fg="white", font=("Arial", 8))
+            button_reestablecer_serie.grid(row=3, column=2, padx=(5, 10), pady=(5, 5))
+
+            self.entry_series_dict[i] = entry_series
+            self.productos.append((entry2, entry3, entry_series))
+
+        self.cancelar_button = tk.Button(self.frame, text="Cancelar", command=self.cancelar, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
+        self.cancelar_button.pack(pady=10, padx=80, side="left", anchor="center")
+
+        self.continuar_button = tk.Button(self.frame, text="Continuar", command=self.mostrar_resumen_view,  bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
+        self.continuar_button.pack(pady=10, padx=80, side="right", anchor="center")
+
+    def reestablecer_serie(self, entry_series):
+        entry_series.config(state="normal")
+        entry_series.delete(0, tk.END)
+        entry_series.insert(0, "")
+        entry_series.config(state="readonly")
+
+    def abrir_agregar_serie_view(self, entry_series):
+        if not self.agregar_serie_view_window or not self.agregar_serie_view_window.winfo_exists():
+            self.agregar_serie_view_window = tk.Toplevel(self.root)
+            agregar_serie_view = AgregarSerieView(self.agregar_serie_view_window, entry_series, self)
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
     def cancelar(self):
         self.close()

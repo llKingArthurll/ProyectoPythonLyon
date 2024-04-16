@@ -3,6 +3,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QDate
 import os
 from app.data.data_manager import DataManager
+from PIL import Image, ImageTk
 
 class IngresarNuevoView(QDialog):
     def __init__(self):
@@ -21,12 +22,22 @@ class IngresarNuevoView(QDialog):
         title_label.setAlignment(Qt.AlignCenter)
         title_label.setStyleSheet("font-size: 32px;")  # Tamaño de fuente 32
 
+<<<<<<< HEAD
         # Número de Guía
         numero_guia_label = QLabel("Número de Guía:")
         numero_guia_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
         numero_guia_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
         self.numero_guia_entry = QLineEdit()
         self.numero_guia_entry.setFixedWidth(150)  # Ancho del QLineEdit de 150 píxeles
+=======
+class IngresarNuevoView:
+    def __init__(self, root, controller):
+        self.root = root
+        self.controller = controller
+        self.configurar_ventana()
+        self.root.iconbitmap("resources/LogoLyon.ico")
+        
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
         # Nombre de Empresa
         nombre_empresa_label = QLabel("Nombre de Empresa:")
@@ -148,6 +159,7 @@ class IngresarNuevoView(QDialog):
         # Limpiar espacios en blanco del texto ingresado en el campo de cantidad
         cantidad_texto = self.cantidad_productos_entry.text().strip()
 
+<<<<<<< HEAD
         # Validar que todos los campos estén llenos
         if (not self.numero_guia_entry.text().strip() or
             not self.nombre_empresa_entry.text().strip() or
@@ -171,6 +183,76 @@ class IngresarNuevoView(QDialog):
         # Validar si se han subido guía y factura
         if self.factura_file_label.text() == self.guia_file_label.text():
             QMessageBox.warning(self, "Error", "Guía y factura deben ser diferentes")
+=======
+    def crear_frame_archivo(self, container, label_text, command_func, file_name_var):
+        frame = tk.Frame(container)
+        label = tk.Label(frame, text=label_text, width=20, anchor="e")
+        label.pack(side="left", padx=5)
+
+        upload_button = tk.Button(frame, text="Subir archivo", command=lambda: command_func(file_name_var))
+        upload_button.pack(side="left")
+
+        return frame
+
+    def posicionar_frames(self, container):
+        for i, frame in enumerate(self.frames):
+            row, col = divmod(i, 3)
+            frame.grid(row=row, column=col, padx=10, pady=(screen_height - 600) // 2, sticky="nsew")
+
+        self.file_label_guia = tk.Label(container, text="", wraplength=200)
+        self.file_label_guia.grid(row=2, column=0, columnspan=2, pady=(5, 0))
+
+        self.file_label_factura = tk.Label(container, text="", wraplength=200)
+        self.file_label_factura.grid(row=2, column=1, columnspan=2, pady=(5, 0))
+
+        tk.Label(container).grid(row=3, column=0, columnspan=3, pady=(5, 0))
+            
+        container.grid_columnconfigure(0, weight=1)
+        container.grid_columnconfigure(1, weight=1)
+
+    def crear_botones(self, container):
+        button_frame = tk.Frame(self.root)
+        button_frame.pack(side="bottom", padx=10, pady=(10, 100))
+
+        cancel_button = tk.Button(button_frame, text="Cancelar", command=self.cancel, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
+        cancel_button.pack(side="left", padx=50)
+
+        continue_button = tk.Button(button_frame, text="Continuar", command=self.continue_form, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
+        continue_button.pack(side="right", padx=50)
+
+    def date_changed(self, event):
+        date_picker = event.widget
+        date = date_picker.get_date()
+        fecha_formato_deseado = date.strftime("%d/%m/%Y")
+        date_picker.set_date(fecha_formato_deseado)
+
+    def upload_file(self, file_name_var):
+        file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
+        if file_path and file_path.lower().endswith(".pdf"):
+            file_name = os.path.basename(file_path)
+            file_name_var.set(file_name)
+            self.file_label_guia.config(text=f"Nombre de la guía: {file_name}")
+            self.file_path_guia = file_path
+            
+
+    def upload_file2(self, file_name_var):
+        file_path = filedialog.askopenfilename(filetypes=[("Archivos PDF", "*.pdf")])
+        if file_path and file_path.lower().endswith(".pdf"):
+            file_name = os.path.basename(file_path)
+            file_name_var.set(file_name)
+            self.file_label_factura.config(text=f"Nombre de la factura: {file_name}")
+            self.file_path_factura = file_path
+
+    def mostrar_ingresar_nuevo(self):
+        self.root.mainloop()
+        
+    def cancel(self):
+        self.root.withdraw()
+        self.controller.mostrar_opciones()
+
+    def continue_form(self):
+        if not self.validar_formulario():
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
             return
 
         return True

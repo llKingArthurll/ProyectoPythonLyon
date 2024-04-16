@@ -5,15 +5,24 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from app.data.data_manager import DataManager
 from app.data.db_queries import DatabaseQueries
+from PIL import Image, ImageTk
+
 
 class ResumenProductoView(QDialog):
     def __init__(self, controller=None):
         super().__init__()
         self.controller = controller
+<<<<<<< HEAD
         self.setWindowTitle("Resumen de Productos")
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
         self.setFixedSize(800, 600)
         self.initUI()
+=======
+        self.root.title("Resumen de Productos")
+        self.root.geometry("400x600")
+        self.root.resizable(True, True)
+        self.root.iconbitmap("resources/LogoLyon.ico")
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
     def initUI(self):
         # Crear un layout vertical para justificar el contenido hacia la parte superior
@@ -21,11 +30,16 @@ class ResumenProductoView(QDialog):
         layout.setAlignment(Qt.AlignTop)
         self.setLayout(layout)
 
+<<<<<<< HEAD
         # Título para el resumen
         resumen_label = QLabel("Resumen de lo ingresado")
         resumen_label.setAlignment(Qt.AlignCenter)
         resumen_label.setStyleSheet("font-size: 20pt; font-weight: bold;")
         layout.addWidget(resumen_label)
+=======
+        self.label = tk.Label(root, text="¡Bienvenido a Resumen!", font=("Arial", 15, "bold"))
+        self.label.pack(pady=20)
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
         # Obtener los datos del DataManager
         numero_guia = DataManager.get_instance().obtener_numero_guia()
@@ -61,6 +75,7 @@ class ResumenProductoView(QDialog):
                 nombre_label = QLabel(f"Nombre: {nombre_producto}")
                 layout.addWidget(nombre_label)
 
+<<<<<<< HEAD
                 # Mostrar las series del producto
                 series_label = QLabel(f"Series: {', '.join(series)}")
                 layout.addWidget(series_label)
@@ -68,6 +83,13 @@ class ResumenProductoView(QDialog):
         # Botones de continuar y cancelar
         botones_layout = QHBoxLayout()
         layout.addLayout(botones_layout)
+=======
+        self.cancelar_button = tk.Button(self.botones_frame, text="Cancelar", command=self.cancelar, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
+        self.cancelar_button.pack(side="left", padx=10)
+
+        self.guardar_button = tk.Button(self.botones_frame, text="Guardar", command=self.guardar, bg="#FE6E0C",fg="white", height=2, width=10, font=("Arial", 9))
+        self.guardar_button.pack(side="left", padx=10)
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
         cancelar_button = QPushButton("Cancelar")
         cancelar_button.setFixedWidth(150)
@@ -108,7 +130,11 @@ class ResumenProductoView(QDialog):
         if self.controller:
             self.controller.mostrar_ingresar_nuevo()
 
+<<<<<<< HEAD
     def mover_archivos(self):
+=======
+    def guardar(self):
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
         data_manager = DataManager.get_instance()
         
         ruta_guia = data_manager.obtener_ruta_guia()
@@ -186,5 +212,29 @@ class ResumenProductoView(QDialog):
         if self.controller:
             self.controller.mostrar_opciones()
 
+<<<<<<< HEAD
     def set_controller(self, controller):
         self.controller = controller
+=======
+        # Limpia los datos del DataManager
+        data_manager.clear_data()
+
+        # Inserta en la tabla 'nuevo_registro'
+        db_queries.insert_nuevo_registro((
+            numero_guia, nombre_empresa, cantidad_productos, fecha_guia, save_data, path_guia, path_factura,
+            nombre_producto_str, descripcion_producto_str, series_producto_str
+        ))
+
+        # Cierra la conexión
+        db_queries.db_connection.close_connection()
+        print("¡Datos guardados exitosamente!")
+        print(f"Se guardó satisfactoriamente el {save_data}")
+        print(f"La ruta de la factura es: {path_factura}")
+        print(f"La ruta de la guía es: {path_guia}")
+
+    def on_frame_configure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def on_canvas_configure(self, event):
+        self.canvas.itemconfig(self.inner_frame_id, width=event.width)
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3

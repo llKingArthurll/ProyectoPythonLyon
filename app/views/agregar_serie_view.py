@@ -1,14 +1,30 @@
+<<<<<<< HEAD
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout
 from PyQt5.QtGui import QIcon
+=======
+import tkinter as tk
+import keyboard
+from PIL import Image, ImageTk
+
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
 class AgregarSerieView(QDialog):
     def __init__(self, entry_target, parent_view):
         super().__init__()
         self.entry_target = entry_target
+<<<<<<< HEAD
         self.parent_view = parent_view
         self.setWindowTitle("Agregar Serie")
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
         self.initUI()
+=======
+        self.pantalla_agregar_productos = pantalla_agregar_productos
+        self.root.title("Agregar Serie")
+        self.root.resizable(width=False, height=False)
+        self.root.geometry("300x130")
+        self.root.iconbitmap("resources/LogoLyon.ico")
+        
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
     def initUI(self):
         layout = QVBoxLayout()
@@ -17,9 +33,14 @@ class AgregarSerieView(QDialog):
         label = QLabel("Agregar Serie:")
         layout.addWidget(label)
 
+<<<<<<< HEAD
         self.entry_serie = QLineEdit()
         layout.addWidget(self.entry_serie)
         self.entry_serie.setFocus()
+=======
+        button_listo = tk.Button(self.root, text="Listo", command=self.cerrar_ventana, width=10,  bg="#FE6E0C",fg="white")
+        button_listo.pack(side="bottom", pady=10)
+>>>>>>> fff2bea02c1bbc8789861e2a41313d6c3710e4d3
 
         button_container = QHBoxLayout()
         layout.addLayout(button_container)
