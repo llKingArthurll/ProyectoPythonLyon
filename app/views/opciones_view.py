@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QVBoxLayout, QPushButton, QHBoxLayout
-from PyQt5.QtGui import QIcon, QFont, QPixmap
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QHBoxLayout
+from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QSize
 from app.config.screen_config import configuracion_window, configuracion_tamano_pantalla
 
-class OpcionesView(QDialog):
+class OpcionesView(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -13,6 +13,7 @@ class OpcionesView(QDialog):
         # Obtener tamaño de pantalla
         screen_geometry = QApplication.desktop().screenGeometry()
         self.setGeometry(0, 0, screen_geometry.width(), screen_geometry.height())
+        self.showMaximized()
 
         self.label = QLabel("¡Bienvenido a las opciones!", self)
         self.label.setFont(QFont("Arial", 15, QFont.Bold))

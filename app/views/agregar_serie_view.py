@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout
 from PyQt5.QtGui import QIcon
 
-class AgregarSerieView(QDialog):
+class AgregarSerieView(QWidget):
     def __init__(self, entry_target, parent_view):
         super().__init__()
         self.entry_target = entry_target

@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 from app.data.db_queries import DatabaseQueries
-import subprocess
+import os
 
 class BuscarProductoView(QtWidgets.QWidget):
     def __init__(self):
@@ -97,16 +97,22 @@ class BuscarProductoView(QtWidgets.QWidget):
 
     def abrir_pdf(self, id_nuevo_ingreso, tipo_archivo):
         # Obtener la ruta del PDF según el tipo de archivo
-        if tipo_archivo == "guia":
+        if tipo_archivo == "factura":
             ruta = self.db_queries.obtener_ruta_guia_por_id(id_nuevo_ingreso)
         else:
             ruta = self.db_queries.obtener_ruta_factura_por_id(id_nuevo_ingreso)
         
-        # Imprimir la ruta en la consola
-        print(f"Ruta del archivo {tipo_archivo}: {ruta}")
-
-        # La función solo imprime la ruta por consola; no intenta abrir el archivo PDF.
-
+        # Verificar si la ruta es válida
+        if ruta:
+            print(f"Abrir archivo PDF: {ruta}")
+            try:
+                # Usar os.startfile para abrir el archivo con la aplicación predeterminada
+                os.startfile(ruta)
+            except Exception as e:
+                print(f"Error al abrir el PDF: {e}")
+                QtWidgets.QMessageBox.warning(self, "Advertencia", f"No se pudo abrir el archivo {tipo_archivo}.")
+        else:
+            QtWidgets.QMessageBox.warning(self, "Advertencia", f"No se encontró ruta para {tipo_archivo}.")
 
     def abrir_ventana_seleccion(self):
         seleccion = self.tabla.selectedItems()

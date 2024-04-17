@@ -1,10 +1,10 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QDateEdit, QDesktopWidget, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QDateEdit, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QDate
 import os
 from app.data.data_manager import DataManager
 
-class IngresarNuevoView(QDialog):
+class IngresarNuevoView(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Ingresando nueva guía")
@@ -12,113 +12,94 @@ class IngresarNuevoView(QDialog):
         self.initUI()
 
     def initUI(self):
-        # Tamaño de la pantalla completa
-        screen_geometry = QDesktopWidget().availableGeometry()
-        self.setGeometry(screen_geometry)
-
-        # Título
+        # Configurar tamaño de la ventana a pantalla completa
+        self.showMaximized()
+        
+        # Crear el layout principal (vertical) para contener los sublayouts
+        main_layout = QVBoxLayout()
+        
+        # Primer layout horizontal (solo título)
+        title_layout = QHBoxLayout()
         title_label = QLabel("Ingresando nueva guía")
         title_label.setAlignment(Qt.AlignCenter)
         title_label.setStyleSheet("font-size: 32px;")  # Tamaño de fuente 32
-
+        title_layout.addWidget(title_label)
+        main_layout.addLayout(title_layout)
+        
+        # Segundo layout horizontal (Número de guía, Nombre de empresa, Fecha)
+        guia_empresa_fecha_layout = QHBoxLayout()
         # Número de Guía
         numero_guia_label = QLabel("Número de Guía:")
-        numero_guia_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
-        numero_guia_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
         self.numero_guia_entry = QLineEdit()
-        self.numero_guia_entry.setFixedWidth(150)  # Ancho del QLineEdit de 150 píxeles
-
         # Nombre de Empresa
         nombre_empresa_label = QLabel("Nombre de Empresa:")
-        nombre_empresa_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
-        nombre_empresa_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
         self.nombre_empresa_entry = QLineEdit()
-        self.nombre_empresa_entry.setFixedWidth(150)  # Ancho del QLineEdit de 150 píxeles
-
         # Fecha
         fecha_label = QLabel("Fecha:")
-        fecha_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
-        fecha_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
         self.fecha_picker = QDateEdit()
-        self.fecha_picker.setDate(QDate.currentDate())  # Fecha por default: fecha de hoy
+        self.fecha_picker.setDate(QDate.currentDate())  # Fecha por defecto es la actual
         self.fecha_picker.setDisplayFormat("dd/MM/yyyy")
-        self.fecha_picker.setFixedWidth(150)  # Ancho del QDateEdit de 150 píxeles
 
+        # Añadir elementos al layout
+        guia_empresa_fecha_layout.addWidget(numero_guia_label)
+        guia_empresa_fecha_layout.addWidget(self.numero_guia_entry)
+        guia_empresa_fecha_layout.addWidget(nombre_empresa_label)
+        guia_empresa_fecha_layout.addWidget(self.nombre_empresa_entry)
+        guia_empresa_fecha_layout.addWidget(fecha_label)
+        guia_empresa_fecha_layout.addWidget(self.fecha_picker)
+        main_layout.addLayout(guia_empresa_fecha_layout)
+        
+        # Tercer layout horizontal (Cantidad de productos, Archivo Factura, Archivo Guía)
+        productos_factura_guia_layout = QHBoxLayout()
         # Cantidad de Productos
         cantidad_productos_label = QLabel("Cantidad de Productos:")
-        cantidad_productos_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
-        cantidad_productos_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        cantidad_productos_label.setFixedWidth(120)
         self.cantidad_productos_entry = QLineEdit()
-        self.cantidad_productos_entry.setFixedWidth(150)  # Ancho del QLineEdit de 150 píxeles
-
-        # Factura
+        self.cantidad_productos_entry.setFixedWidth(180)
+        # Archivo Factura
         factura_label = QLabel("Archivo Factura:")
-        factura_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
-        factura_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
-        self.factura_file_label = QLabel("")  # Label para mostrar el nombre del archivo seleccionado
-        self.factura_file_label.setWordWrap(True)  # Habilitar el ajuste de texto
-        self.factura_file_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
-        self.factura_filename = ""  # Variable para guardar el nombre del PDF
+        factura_label.setFixedWidth(120)
+        self.factura_file_label = QLabel("")
         subir_factura_button = QPushButton("Subir archivo")
-        subir_factura_button.setFixedWidth(80)  # Ancho del botón de subir archivo
+        subir_factura_button.setFixedWidth(80)
         subir_factura_button.clicked.connect(self.upload_factura)
-
-        # Guía
+        # Archivo Guía
         guia_label = QLabel("Archivo Guía:")
-        guia_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
-        guia_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
-        self.guia_file_label = QLabel("")  # Label para mostrar el nombre del archivo seleccionado
-        self.guia_file_label.setWordWrap(True)  # Habilitar el ajuste de texto
-        self.guia_file_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
-        self.guia_filename = ""  # Variable para guardar el nombre del PDF
+        guia_label.setFixedWidth(120)
+        self.guia_file_label = QLabel("")
         subir_guia_button = QPushButton("Subir archivo")
-        subir_guia_button.setFixedWidth(80)  # Ancho del botón de subir archivo
         subir_guia_button.clicked.connect(self.upload_guia)
+        subir_guia_button.setFixedWidth(80)
 
-        # Botones de aceptar y cancelar
-        aceptar_button = QPushButton("Continuar")
-        aceptar_button.clicked.connect(self.continuar_ingreso)
+        # Añadir elementos al layout
+        productos_factura_guia_layout.addWidget(cantidad_productos_label)
+        productos_factura_guia_layout.addWidget(self.cantidad_productos_entry)
+        productos_factura_guia_layout.addWidget(factura_label)
+        productos_factura_guia_layout.addWidget(subir_factura_button)
+        productos_factura_guia_layout.addWidget(guia_label)
+        productos_factura_guia_layout.addWidget(subir_guia_button)
+        main_layout.addLayout(productos_factura_guia_layout)
+
+        # Cuarto layout horizontal (Labels para mostrar nombres de los archivos)
+        file_labels_layout = QHBoxLayout()
+        file_labels_layout.addWidget(self.factura_file_label)
+        file_labels_layout.addWidget(self.guia_file_label)
+        main_layout.addLayout(file_labels_layout)
+
+        # Quinto layout horizontal (Botones de cancelar y continuar)
+        buttons_layout = QHBoxLayout()
         cancelar_button = QPushButton("Cancelar")
         cancelar_button.clicked.connect(self.cancelar)
-
-        # Layout principal
-        layout = QVBoxLayout()
-        layout.addWidget(title_label)
-
-        # Layout para los primeros 3 elementos
-        first_row_layout = QHBoxLayout()
-        first_row_layout.addWidget(numero_guia_label)
-        first_row_layout.addWidget(self.numero_guia_entry)
-        first_row_layout.addWidget(nombre_empresa_label)
-        first_row_layout.addWidget(self.nombre_empresa_entry)
-        first_row_layout.addWidget(fecha_label)
-        first_row_layout.addWidget(self.fecha_picker)
-        layout.addLayout(first_row_layout)
-
-        # Layout para los siguientes 3 elementos
-        second_row_layout = QHBoxLayout()
-        second_row_layout.addWidget(cantidad_productos_label)
-        second_row_layout.addWidget(self.cantidad_productos_entry)
-        layout.addLayout(second_row_layout)
-
-        # Layout para los archivos de factura y guía
-        file_labels_layout = QHBoxLayout()
-        file_labels_layout.addWidget(factura_label)
-        file_labels_layout.addWidget(self.factura_file_label)
-        file_labels_layout.addWidget(subir_factura_button)
-        file_labels_layout.addWidget(guia_label)
-        file_labels_layout.addWidget(self.guia_file_label)
-        file_labels_layout.addWidget(subir_guia_button)
-        layout.addLayout(file_labels_layout)
-
-        # Layout para los botones de aceptar y cancelar
-        buttons_layout = QHBoxLayout()
-        buttons_layout.addWidget(cancelar_button)  # Botón cancelar a la izquierda
-        buttons_layout.addWidget(aceptar_button)  # Botón aceptar a la derecha
-        buttons_layout.setAlignment(Qt.AlignCenter)
-        layout.addLayout(buttons_layout)
-
-        self.setLayout(layout)
+        aceptar_button = QPushButton("Continuar")
+        aceptar_button.clicked.connect(self.continuar_ingreso)
+        
+        # Añadir botones al layout
+        buttons_layout.addWidget(cancelar_button)
+        buttons_layout.addWidget(aceptar_button)
+        main_layout.addLayout(buttons_layout)
+        
+        # Asignar el layout principal a la ventana
+        self.setLayout(main_layout)
 
     def validar_ingreso(self):
         # Limpiar espacios en blanco del texto ingresado en el campo de cantidad
@@ -128,7 +109,7 @@ class IngresarNuevoView(QDialog):
         if (not self.numero_guia_entry.text().strip() or
             not self.nombre_empresa_entry.text().strip() or
             not self.fecha_picker.date().isValid() or
-            not cantidad_texto or  # Utilizar el texto limpio en la validación
+            not cantidad_texto or
             not self.factura_file_label.text().strip() or
             not self.guia_file_label.text().strip()):
             QMessageBox.warning(self, "Error", "Llene todos los campos")
@@ -156,27 +137,16 @@ class IngresarNuevoView(QDialog):
         if not self.validar_ingreso():
             return
 
-        # Limpiar espacios en blanco del texto ingresado en el campo de cantidad
-        cantidad_texto = self.cantidad_productos_entry.text().strip()
-        
         # Guardar datos en el DataManager
         data_manager = DataManager.get_instance()
         data_manager.guardar_datos_ingreso_nuevo(
             numero_guia=self.numero_guia_entry.text(),
             nombre_empresa=self.nombre_empresa_entry.text(),
             fecha=self.fecha_picker.date().toString("dd/MM/yyyy"),
-            cantidad_productos=cantidad_texto,
-            ruta_guia=self.factura_filename,
-            ruta_factura=self.guia_filename
+            cantidad_productos=self.cantidad_productos_entry.text().strip(),
+            ruta_factura=self.factura_filename,
+            ruta_guia=self.guia_filename
         )
-
-        # Imprimir los datos por consola
-        print("Número de Guía:", self.numero_guia_entry.text())
-        print("Nombre de Empresa:", self.nombre_empresa_entry.text())
-        print("Fecha:", self.fecha_picker.date().toString("dd/MM/yyyy"))
-        print("Cantidad de Productos:", cantidad_texto)
-        print("Ruta Factura Completa:", self.factura_filename)
-        print("Ruta Guía Completa:", self.guia_filename)
 
         # Cerrar esta ventana y abrir la siguiente
         self.close()
