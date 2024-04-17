@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout, QPushButton, QApplicat
 from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtCore import Qt
 
+
 class BienvenidaView(QDialog):
     def __init__(self):
         super().__init__()
