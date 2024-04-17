@@ -37,7 +37,7 @@ class AppController:
             self.opciones_view.close()
         self.ingresar_nuevo_view = IngresarNuevoView()
         self.ingresar_nuevo_view.set_controller(self)
-        self.ingresar_nuevo_view.exec_()
+        self.ingresar_nuevo_view.show()
 
     def mostrar_ingreso_producto(self):
         if self.ingreso_producto_view:
@@ -49,7 +49,7 @@ class AppController:
         if self.agregar_serie_view:
             self.agregar_serie_view.close()
         self.agregar_serie_view = AgregarSerieView(entry_target=entry, parent_view=self.ingreso_producto_view)
-        self.agregar_serie_view.exec_()
+        self.agregar_serie_view.show()
     
     def mostrar_resumen_producto(self):
         if self.resumen_producto_view:

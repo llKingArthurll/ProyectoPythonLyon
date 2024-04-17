@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QWidget, QScrollArea, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QWidget, QScrollArea, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from app.data.data_manager import DataManager
 
-class IngresoProductoView(QDialog):
+class IngresoProductoView(QWidget):
     def __init__(self, controller=None):
         super().__init__()
         self.controller = controller

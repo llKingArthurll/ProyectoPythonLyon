@@ -1,9 +1,8 @@
-from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout, QPushButton, QApplication, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QApplication, QHBoxLayout
 from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtCore import Qt
 
-
-class BienvenidaView(QDialog):
+class BienvenidaView(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -12,8 +11,9 @@ class BienvenidaView(QDialog):
         width, height = screen_resolution.width(), screen_resolution.height()
 
         self.setWindowTitle("LYON SYSTEM")
-        self.setGeometry(0, 0, width, height)
+        self.setGeometry(100, 100, width, height)
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
+        self.showMaximized()
 
         self.title_label = QLabel("Bienvenido(a) al Sistema", self)
         self.title_label.setFont(QFont("Verdana", 25))
