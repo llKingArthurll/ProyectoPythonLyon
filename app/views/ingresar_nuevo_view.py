@@ -25,8 +25,10 @@ class IngresarNuevoView(QDialog):
         numero_guia_label = QLabel("Número de Guía:")
         numero_guia_label.setFixedWidth(120)  # Ancho del QLabel de 120 píxeles
         numero_guia_label.setAlignment(Qt.AlignLeft)  # Justificado a la izquierda
+        numero_guia_label.setStyleSheet("padding: 5px; margin-right: 10px;")  # Agregar padding y margen
         self.numero_guia_entry = QLineEdit()
         self.numero_guia_entry.setFixedWidth(150)  # Ancho del QLineEdit de 150 píxeles
+        self.numero_guia_entry.setStyleSheet("padding: 5px;")  # Agregar padding
 
         # Nombre de Empresa
         nombre_empresa_label = QLabel("Nombre de Empresa:")
@@ -78,8 +80,32 @@ class IngresarNuevoView(QDialog):
         # Botones de aceptar y cancelar
         aceptar_button = QPushButton("Continuar")
         aceptar_button.clicked.connect(self.continuar_ingreso)
+        aceptar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)   
         cancelar_button = QPushButton("Cancelar")
         cancelar_button.clicked.connect(self.cancelar)
+        cancelar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)   
 
         # Layout principal
         layout = QVBoxLayout()
@@ -89,8 +115,10 @@ class IngresarNuevoView(QDialog):
         first_row_layout = QHBoxLayout()
         first_row_layout.addWidget(numero_guia_label)
         first_row_layout.addWidget(self.numero_guia_entry)
+        first_row_layout.addSpacing(20)
         first_row_layout.addWidget(nombre_empresa_label)
         first_row_layout.addWidget(self.nombre_empresa_entry)
+        first_row_layout.addSpacing(20)
         first_row_layout.addWidget(fecha_label)
         first_row_layout.addWidget(self.fecha_picker)
         layout.addLayout(first_row_layout)
@@ -106,6 +134,7 @@ class IngresarNuevoView(QDialog):
         file_labels_layout.addWidget(factura_label)
         file_labels_layout.addWidget(self.factura_file_label)
         file_labels_layout.addWidget(subir_factura_button)
+        file_labels_layout.addSpacing(20)
         file_labels_layout.addWidget(guia_label)
         file_labels_layout.addWidget(self.guia_file_label)
         file_labels_layout.addWidget(subir_guia_button)
