@@ -9,35 +9,42 @@ class IngresarNuevoView(QWidget):
         super().__init__()
         self.setWindowTitle("Ingresando nueva guía")
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
+        self.showMaximized()
+        
         self.initUI()
 
     def initUI(self):
-        # Configurar tamaño de la ventana a pantalla completa
-        self.showMaximized()
-        
-        # Crear el layout principal (vertical) para contener los sublayouts
         main_layout = QVBoxLayout()
-        
+        main_layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+
         # Primer layout horizontal (solo título)
         title_layout = QHBoxLayout()
         title_label = QLabel("Ingresando nueva guía")
         title_label.setAlignment(Qt.AlignCenter)
-        title_label.setStyleSheet("font-size: 32px;")  # Tamaño de fuente 32
+        title_label.setStyleSheet("font-size: 32px;")
         title_layout.addWidget(title_label)
         main_layout.addLayout(title_layout)
-        
+
         # Segundo layout horizontal (Número de guía, Nombre de empresa, Fecha)
         guia_empresa_fecha_layout = QHBoxLayout()
         # Número de Guía
         numero_guia_label = QLabel("Número de Guía:")
+        numero_guia_label.setFixedWidth(120)
         self.numero_guia_entry = QLineEdit()
+        self.numero_guia_entry.setFixedWidth(200)
+        self.numero_guia_entry.setPlaceholderText("Número de guía aquí...")
         # Nombre de Empresa
         nombre_empresa_label = QLabel("Nombre de Empresa:")
+        nombre_empresa_label.setFixedWidth(120)
         self.nombre_empresa_entry = QLineEdit()
+        self.nombre_empresa_entry.setFixedWidth(200)
+        self.nombre_empresa_entry.setPlaceholderText("Nombre de empresa aquí...")
         # Fecha
         fecha_label = QLabel("Fecha:")
+        fecha_label.setFixedWidth(120)
         self.fecha_picker = QDateEdit()
-        self.fecha_picker.setDate(QDate.currentDate())  # Fecha por defecto es la actual
+        self.fecha_picker.setFixedWidth(120)
+        self.fecha_picker.setDate(QDate.currentDate())
         self.fecha_picker.setDisplayFormat("dd/MM/yyyy")
 
         # Añadir elementos al layout
@@ -48,28 +55,29 @@ class IngresarNuevoView(QWidget):
         guia_empresa_fecha_layout.addWidget(fecha_label)
         guia_empresa_fecha_layout.addWidget(self.fecha_picker)
         main_layout.addLayout(guia_empresa_fecha_layout)
-        
+
         # Tercer layout horizontal (Cantidad de productos, Archivo Factura, Archivo Guía)
         productos_factura_guia_layout = QHBoxLayout()
         # Cantidad de Productos
         cantidad_productos_label = QLabel("Cantidad de Productos:")
         cantidad_productos_label.setFixedWidth(120)
         self.cantidad_productos_entry = QLineEdit()
-        self.cantidad_productos_entry.setFixedWidth(180)
+        self.cantidad_productos_entry.setFixedWidth(200)
+        self.cantidad_productos_entry.setPlaceholderText("Números entre 1 y 99")
         # Archivo Factura
         factura_label = QLabel("Archivo Factura:")
         factura_label.setFixedWidth(120)
         self.factura_file_label = QLabel("")
         subir_factura_button = QPushButton("Subir archivo")
-        subir_factura_button.setFixedWidth(80)
+        subir_factura_button.setFixedWidth(150)
         subir_factura_button.clicked.connect(self.upload_factura)
         # Archivo Guía
         guia_label = QLabel("Archivo Guía:")
         guia_label.setFixedWidth(120)
         self.guia_file_label = QLabel("")
         subir_guia_button = QPushButton("Subir archivo")
+        subir_guia_button.setFixedWidth(150)
         subir_guia_button.clicked.connect(self.upload_guia)
-        subir_guia_button.setFixedWidth(80)
 
         # Añadir elementos al layout
         productos_factura_guia_layout.addWidget(cantidad_productos_label)
@@ -89,15 +97,17 @@ class IngresarNuevoView(QWidget):
         # Quinto layout horizontal (Botones de cancelar y continuar)
         buttons_layout = QHBoxLayout()
         cancelar_button = QPushButton("Cancelar")
+        cancelar_button.setFixedWidth(150)
         cancelar_button.clicked.connect(self.cancelar)
         aceptar_button = QPushButton("Continuar")
+        aceptar_button.setFixedWidth(150)
         aceptar_button.clicked.connect(self.continuar_ingreso)
         
         # Añadir botones al layout
         buttons_layout.addWidget(cancelar_button)
         buttons_layout.addWidget(aceptar_button)
         main_layout.addLayout(buttons_layout)
-        
+
         # Asignar el layout principal a la ventana
         self.setLayout(main_layout)
 
