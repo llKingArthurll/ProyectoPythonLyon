@@ -36,12 +36,24 @@ class BuscarProductoView(QtWidgets.QWidget):
         boton_buscar.setFixedWidth(150)
         boton_buscar.clicked.connect(self.busqueda_especifica)
         layout_busqueda.addWidget(boton_buscar)
+        layout_busqueda.setStyleSheet("""
+            background-color: #FE6E0C;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        """)
         
         # Botón de borrar
         boton_borrar = QtWidgets.QPushButton("Borrar")
         boton_borrar.setFixedWidth(150)
         boton_borrar.clicked.connect(self.borrar)
         layout_busqueda.addWidget(boton_borrar)
+        boton_borrar.setStyleSheet("""
+            background-color: #FE6E0C;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        """)
         
         layout_centrado_busqueda = QtWidgets.QHBoxLayout()
         layout_centrado_busqueda.addLayout(layout_busqueda)
