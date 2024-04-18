@@ -74,11 +74,35 @@ class ResumenProductoView(QWidget):
         cancelar_button.setFixedWidth(150)
         cancelar_button.clicked.connect(self.cancelar)
         botones_layout.addWidget(cancelar_button)
+        cancelar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)   
 
         continuar_button = QPushButton("Continuar")
         continuar_button.setFixedWidth(150)
         continuar_button.clicked.connect(self.continuar)
         botones_layout.addWidget(continuar_button)
+        continuar_button.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)   
 
     def cancelar(self):
         self.close()
