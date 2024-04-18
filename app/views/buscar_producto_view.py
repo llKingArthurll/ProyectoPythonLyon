@@ -9,7 +9,6 @@ class BuscarProductoView(QtWidgets.QWidget):
         self.setGeometry(100, 100, 800, 600)
         self.setWindowIcon(QtGui.QIcon("resources/LogoLyon.ico"))
         self.showMaximized()
-
         self.db_queries = DatabaseQueries()
         self.configurar_ui()
 
@@ -35,7 +34,7 @@ class BuscarProductoView(QtWidgets.QWidget):
         # Botón de buscar
         boton_buscar = QtWidgets.QPushButton("Buscar")
         boton_buscar.setFixedWidth(150)
-        boton_buscar.clicked.connect(self.buscar)
+        boton_buscar.clicked.connect(self.busqueda_especifica)
         layout_busqueda.addWidget(boton_buscar)
         layout_busqueda.setStyleSheet("""
             background-color: #FE6E0C;
@@ -110,9 +109,9 @@ class BuscarProductoView(QtWidgets.QWidget):
     def abrir_pdf(self, id_nuevo_ingreso, tipo_archivo):
         # Obtener la ruta del PDF según el tipo de archivo
         if tipo_archivo == "factura":
-            ruta = self.db_queries.obtener_ruta_guia_por_id(id_nuevo_ingreso)
-        else:
             ruta = self.db_queries.obtener_ruta_factura_por_id(id_nuevo_ingreso)
+        else:
+            ruta = self.db_queries.obtener_ruta_guia_por_id(id_nuevo_ingreso)
         
         # Verificar si la ruta es válida
         if ruta:
@@ -137,8 +136,99 @@ class BuscarProductoView(QtWidgets.QWidget):
     def set_controller(self, controller):
         self.controller = controller
 
-    def buscar(self):
-        QtWidgets.QMessageBox.information(self, "Información", "Botón 'buscar' activado")
+    def busqueda_especifica(self):
+        # Obtener el término de búsqueda desde la barra de búsqueda
+        termino_busqueda = self.barra_busqueda.text()
+        if not termino_busqueda:
+            # Si no hay término de búsqueda, no hacer nada
+            return
 
+        # Buscar en la base de datos por número de guía
+        ids_encontrados = self.db_queries.buscar_por_numero_guia(termino_busqueda)
+        if ids_encontrados:
+            print("Se encontró en la guía")
+            print(f"IDs encontrados: {ids_encontrados}")
+            self.actualizar_tabla_por_ids(ids_encontrados)
+            return
+
+        # Buscar por nombre de empresa
+        ids_encontrados = self.db_queries.buscar_por_nombre_empresa(termino_busqueda)
+        if ids_encontrados:
+            print("Se encontró en nombre de empresa")
+            print(f"IDs encontrados: {ids_encontrados}")
+            self.actualizar_tabla_por_ids(ids_encontrados)
+            return
+
+        # Buscar por nombre de producto
+        ids_encontrados = self.db_queries.buscar_por_nombre_producto(termino_busqueda)
+        if ids_encontrados:
+            print("Se encontró en nombre de producto")
+            print(f"IDs encontrados: {ids_encontrados}")
+            self.actualizar_tabla_por_ids(ids_encontrados)
+            return
+
+        # Buscar por serie de producto
+        ids_encontrados = self.db_queries.buscar_por_serie_producto(termino_busqueda)
+        if ids_encontrados:
+            print("Se encontró en la serie")
+            print(f"IDs encontrados: {ids_encontrados}")
+            self.actualizar_tabla_por_ids(ids_encontrados)
+            return
+
+        # Si no se encontró ningún resultado en las búsquedas, mostrar un mensaje
+        QtWidgets.QMessageBox.warning(self, "Advertencia", "No se encontró nada en la búsqueda.")
+
+    def actualizar_tabla_por_ids(self, ids):
+        # Limpiar la tabla actual
+        self.tabla.clearContents()
+        self.tabla.setRowCount(0)  # Restablecer el número de filas de la tabla
+
+        # Verificar si hay ID para actualizar
+        if not ids:
+            print("No hay ID para actualizar.")
+            return
+
+        # Crear una lista para almacenar todos los datos que se obtengan por cada ID
+        todos_los_datos = []
+
+        # Recorrer los ID obtenidos de las búsquedas
+        for id_nuevo_ingreso in ids:
+            # Obtener los detalles del nuevo ingreso por ID
+            detalles_ingreso = self.db_queries.obtener_nuevo_ingreso_por_id(id_nuevo_ingreso)
+            if detalles_ingreso:
+                todos_los_datos.append(detalles_ingreso)
+
+        # Verificar si se obtuvieron datos
+        if not todos_los_datos:
+            print("No se obtuvieron datos para los ID dados.")
+            return
+
+        # Establecer el número de filas de la tabla según los datos obtenidos
+        self.tabla.setRowCount(len(todos_los_datos))
+
+        # Llenar la tabla con los datos obtenidos
+        for i, datos in enumerate(todos_los_datos):
+            for j, valor in enumerate(datos):
+                item = QtWidgets.QTableWidgetItem(str(valor))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tabla.setItem(i, j, item)
+
+            # Obtener las rutas de la guía y la factura
+            ruta_guia = self.db_queries.obtener_ruta_guia_por_id(datos[0])
+            ruta_factura = self.db_queries.obtener_ruta_factura_por_id(datos[0])
+
+            # Crear botones para ver Guía y Factura
+            boton_guia = QtWidgets.QPushButton("Ver Guía")
+            boton_guia.setStyleSheet("color: blue; text-decoration: underline;")
+            boton_guia.clicked.connect(lambda _, idx=datos[0]: self.abrir_pdf(idx, "guia"))
+            self.tabla.setCellWidget(i, 5, boton_guia)
+            
+            boton_factura = QtWidgets.QPushButton("Ver Factura")
+            boton_factura.setStyleSheet("color: blue; text-decoration: underline;")
+            boton_factura.clicked.connect(lambda _, idx=datos[0]: self.abrir_pdf(idx, "factura"))
+            self.tabla.setCellWidget(i, 6, boton_factura)
+            
     def borrar(self):
-        QtWidgets.QMessageBox.information(self, "Información", "Botón 'borrar' activado")
+        # Borrar el contenido de la barra de búsqueda y restablecer la tabla
+        self.barra_busqueda.clear()
+        self.mostrar_datos_en_tabla()

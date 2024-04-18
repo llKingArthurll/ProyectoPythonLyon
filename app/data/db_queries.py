@@ -156,3 +156,78 @@ class DatabaseQueries:
         else:
             print(f"No se encontró ruta de la factura para el ID de nuevo ingreso {id_nuevo_ingreso}.")
             return None
+
+    def buscar_por_numero_guia(self, termino_busqueda):
+        db_connection = DatabaseConnection()
+        connection = db_connection.connection
+        query = """
+        SELECT id_nuevoingreso
+        FROM NuevoIngreso
+        WHERE nombre_guia LIKE ?;
+        """
+        cursor = connection.cursor()
+        cursor.execute(query, (f'%{termino_busqueda}%',))
+        resultados = cursor.fetchall()
+        cursor.close()
+        db_connection.close_connection()
+        return [resultado[0] for resultado in resultados]
+
+    def buscar_por_nombre_empresa(self, termino_busqueda):
+        db_connection = DatabaseConnection()
+        connection = db_connection.connection
+        query = """
+        SELECT id_nuevoingreso
+        FROM NuevoIngreso
+        WHERE nombre_empresa LIKE ?;
+        """
+        cursor = connection.cursor()
+        cursor.execute(query, (f'%{termino_busqueda}%',))
+        resultados = cursor.fetchall()
+        cursor.close()
+        db_connection.close_connection()
+        return [resultado[0] for resultado in resultados]
+
+    def buscar_por_nombre_producto(self, termino_busqueda):
+        db_connection = DatabaseConnection()
+        connection = db_connection.connection
+        query = """
+        SELECT id_nuevoingreso
+        FROM Productos
+        WHERE nombre_producto LIKE ?;
+        """
+        cursor = connection.cursor()
+        cursor.execute(query, (f'%{termino_busqueda}%',))
+        resultados = cursor.fetchall()
+        cursor.close()
+        db_connection.close_connection()
+        return [resultado[0] for resultado in resultados]
+
+    def buscar_por_serie_producto(self, termino_busqueda):
+        db_connection = DatabaseConnection()
+        connection = db_connection.connection
+        query = """
+        SELECT id_nuevoingreso
+        FROM Productos
+        WHERE series_producto LIKE ?;
+        """
+        cursor = connection.cursor()
+        cursor.execute(query, (f'%{termino_busqueda}%',))
+        resultados = cursor.fetchall()
+        cursor.close()
+        db_connection.close_connection()
+        return [resultado[0] for resultado in resultados]
+    
+    def obtener_nuevo_ingreso_por_id(self, id_nuevoingreso):
+        db_connection = DatabaseConnection()
+        connection = db_connection.connection
+        query = """
+        SELECT *
+        FROM NuevoIngreso
+        WHERE id_nuevoingreso = ?;
+        """
+        cursor = connection.cursor()
+        cursor.execute(query, (id_nuevoingreso,))
+        resultado = cursor.fetchone()
+        cursor.close()
+        db_connection.close_connection()
+        return resultado
