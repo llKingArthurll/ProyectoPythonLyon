@@ -27,10 +27,34 @@ class AgregarSerieView(QWidget):
         button_agregar = QPushButton("Agregar")
         button_agregar.clicked.connect(self.agregar_serie)
         button_container.addWidget(button_agregar)
+        button_agregar.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)
 
         button_listo = QPushButton("Listo")
         button_listo.clicked.connect(self.cerrar_ventana)
         button_container.addWidget(button_listo)
+        button_listo.setStyleSheet("""
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)
 
         # Vincular el evento de presionar Enter al método agregar_serie
         self.entry_serie.returnPressed.connect(self.agregar_serie)
@@ -46,4 +70,4 @@ class AgregarSerieView(QWidget):
             self.entry_serie.setFocus()
 
     def cerrar_ventana(self):
-        self.accept()
+        self.close()
