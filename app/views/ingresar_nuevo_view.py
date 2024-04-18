@@ -9,6 +9,8 @@ class IngresarNuevoView(QWidget):
         super().__init__()
         self.setWindowTitle("Ingresando nueva guía")
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
+        self.showMaximized()
+        
         self.initUI()
 
     def initUI(self):

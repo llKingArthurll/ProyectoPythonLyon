@@ -46,4 +46,4 @@ class AgregarSerieView(QWidget):
             self.entry_serie.setFocus()
 
     def cerrar_ventana(self):
-        self.accept()
+        self.close()

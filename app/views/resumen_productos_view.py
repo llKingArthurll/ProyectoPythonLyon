@@ -1,18 +1,19 @@
 import os
 import shutil
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from app.data.data_manager import DataManager
 from app.data.db_queries import DatabaseQueries
 
-class ResumenProductoView(QDialog):
+class ResumenProductoView(QWidget):
     def __init__(self, controller=None):
         super().__init__()
         self.controller = controller
         self.setWindowTitle("Resumen de Productos")
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
         self.setFixedSize(800, 600)
+        self.showMaximized()
         self.initUI()
 
     def initUI(self):
