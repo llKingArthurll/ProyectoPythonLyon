@@ -13,55 +13,59 @@ class BuscarProductoView(QtWidgets.QWidget):
         self.configurar_ui()
 
     def configurar_ui(self):
+        # Configurar el layout principal
         layout_principal = QtWidgets.QVBoxLayout()
-        layout_principal.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignHCenter)
         self.setLayout(layout_principal)
 
-        # Layout para el título
+        # Configurar el título centrado
         layout_titulo = QtWidgets.QHBoxLayout()
+        layout_titulo.setAlignment(QtCore.Qt.AlignCenter)  # Centrar el título
         titulo_label = QtWidgets.QLabel("Busca tu producto aquí")
         titulo_label.setFont(QtGui.QFont("Arial", 16, QtGui.QFont.Bold))
         layout_titulo.addWidget(titulo_label)
         layout_principal.addLayout(layout_titulo)
 
-        # Layout para la barra de búsqueda
+        # Configurar el layout para la barra de búsqueda
         layout_busqueda = QtWidgets.QHBoxLayout()
         self.barra_busqueda = QtWidgets.QLineEdit()
         self.barra_busqueda.setPlaceholderText("Buscar producto...")
         self.barra_busqueda.setFixedWidth(800)
+        self.barra_busqueda.setFocus()  # Establecer foco en la barra de búsqueda
         layout_busqueda.addWidget(self.barra_busqueda)
-        
-        # Botón de buscar
+
+        # Configurar el botón de buscar
         boton_buscar = QtWidgets.QPushButton("Buscar")
         boton_buscar.setFixedWidth(150)
         boton_buscar.clicked.connect(self.busqueda_especifica)
-        layout_busqueda.addWidget(boton_buscar)
-        layout_busqueda.setStyleSheet("""
+        boton_buscar.setStyleSheet("""
             background-color: #FE6E0C;
             color: white;
             padding: 10px;
             border-radius: 5px;
         """)
+        layout_busqueda.addWidget(boton_buscar)
         
-        # Botón de borrar
+        # Asignar la acción de búsqueda a la tecla Enter en la barra de búsqueda
+        self.barra_busqueda.returnPressed.connect(self.busqueda_especifica)
+        
+        # Configurar el botón de borrar
         boton_borrar = QtWidgets.QPushButton("Borrar")
         boton_borrar.setFixedWidth(150)
         boton_borrar.clicked.connect(self.borrar)
-        layout_busqueda.addWidget(boton_borrar)
         boton_borrar.setStyleSheet("""
             background-color: #FE6E0C;
             color: white;
             padding: 10px;
             border-radius: 5px;
         """)
-        
-        layout_centrado_busqueda = QtWidgets.QHBoxLayout()
-        layout_centrado_busqueda.addLayout(layout_busqueda)
-        layout_principal.addLayout(layout_centrado_busqueda)
+        layout_busqueda.addWidget(boton_borrar)
 
-        # Layout para la tabla
+        # Añadir el layout de búsqueda al layout principal
+        layout_principal.addLayout(layout_busqueda)
+
+        # Configurar el layout para la tabla
         layout_centro = QtWidgets.QHBoxLayout()
-        layout_centro.setAlignment(QtCore.Qt.AlignCenter)
+        layout_centro.setAlignment(QtCore.Qt.AlignCenter)  # Centrar la tabla
         self.tabla = QtWidgets.QTableWidget()
         self.tabla.setColumnCount(7)
         self.tabla.setHorizontalHeaderLabels(["ID", "Nombre Guía", "Nombre Empresa", "Cantidad Productos", "Fecha Guía", "Guía", "Factura"])
@@ -76,6 +80,21 @@ class BuscarProductoView(QtWidgets.QWidget):
         self.tabla.verticalHeader().setVisible(False)
         self.tabla.itemSelectionChanged.connect(self.abrir_ventana_seleccion)
         self.mostrar_datos_en_tabla()
+
+        # Añadir un botón de "Volver" después de la tabla
+        layout_volver = QtWidgets.QHBoxLayout()
+        layout_volver.setAlignment(QtCore.Qt.AlignCenter)  # Centrar el botón "Volver"
+        boton_volver = QtWidgets.QPushButton("Volver")
+        boton_volver.setFixedWidth(150)
+        boton_volver.clicked.connect(self.volver_opciones)  # Conecta la función a ejecutar al hacer clic
+        boton_volver.setStyleSheet("""
+            background-color: #FE6E0C;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        """)
+        layout_volver.addWidget(boton_volver)
+        layout_principal.addLayout(layout_volver)
 
     def mostrar_datos_en_tabla(self):
         resumen_nuevo_ingreso = self.db_queries.obtener_resumen_nuevo_ingreso()
@@ -117,7 +136,6 @@ class BuscarProductoView(QtWidgets.QWidget):
         if ruta:
             print(f"Abrir archivo PDF: {ruta}")
             try:
-                # Usar os.startfile para abrir el archivo con la aplicación predeterminada
                 os.startfile(ruta)
             except Exception as e:
                 print(f"Error al abrir el PDF: {e}")
@@ -133,50 +151,46 @@ class BuscarProductoView(QtWidgets.QWidget):
                 id_nuevo_ingreso = self.tabla.item(fila_seleccionada, 0).text()
                 self.controller.mostrar_buscar_serie(id_nuevo_ingreso)
 
-    def set_controller(self, controller):
-        self.controller = controller
-
     def busqueda_especifica(self):
-        # Obtener el término de búsqueda desde la barra de búsqueda
-        termino_busqueda = self.barra_busqueda.text()
-        if not termino_busqueda:
-            # Si no hay término de búsqueda, no hacer nada
-            return
-
-        # Buscar en la base de datos por número de guía
-        ids_encontrados = self.db_queries.buscar_por_numero_guia(termino_busqueda)
-        if ids_encontrados:
+        consulta = self.barra_busqueda.text().strip()
+        
+        # Inicializar una lista para almacenar IDs de resultados únicos
+        ids_unicos = set()
+        
+        # Buscar por número de guía
+        resultados_guia = self.db_queries.buscar_por_numero_guia(consulta)
+        if resultados_guia:
             print("Se encontró en la guía")
-            print(f"IDs encontrados: {ids_encontrados}")
-            self.actualizar_tabla_por_ids(ids_encontrados)
-            return
+            ids_unicos.update(resultados_guia)
 
         # Buscar por nombre de empresa
-        ids_encontrados = self.db_queries.buscar_por_nombre_empresa(termino_busqueda)
-        if ids_encontrados:
+        resultados_empresa = self.db_queries.buscar_por_nombre_empresa(consulta)
+        if resultados_empresa:
             print("Se encontró en nombre de empresa")
-            print(f"IDs encontrados: {ids_encontrados}")
-            self.actualizar_tabla_por_ids(ids_encontrados)
-            return
-
+            ids_unicos.update(resultados_empresa)
+        
         # Buscar por nombre de producto
-        ids_encontrados = self.db_queries.buscar_por_nombre_producto(termino_busqueda)
-        if ids_encontrados:
+        resultados_producto = self.db_queries.buscar_por_nombre_producto(consulta)
+        if resultados_producto:
             print("Se encontró en nombre de producto")
-            print(f"IDs encontrados: {ids_encontrados}")
-            self.actualizar_tabla_por_ids(ids_encontrados)
-            return
-
+            ids_unicos.update(resultados_producto)
+        
         # Buscar por serie de producto
-        ids_encontrados = self.db_queries.buscar_por_serie_producto(termino_busqueda)
-        if ids_encontrados:
+        resultados_serie = self.db_queries.buscar_por_serie_producto(consulta)
+        if resultados_serie:
             print("Se encontró en la serie")
-            print(f"IDs encontrados: {ids_encontrados}")
-            self.actualizar_tabla_por_ids(ids_encontrados)
+            ids_unicos.update(resultados_serie)
+        
+        # Convertir el conjunto de IDs únicos a una lista
+        ids_unicos = list(ids_unicos)
+        
+        # Si no hay resultados, mostrar un mensaje
+        if not ids_unicos:
+            QtWidgets.QMessageBox.warning(self, "Advertencia", "No se encontró nada en la búsqueda.")
             return
-
-        # Si no se encontró ningún resultado en las búsquedas, mostrar un mensaje
-        QtWidgets.QMessageBox.warning(self, "Advertencia", "No se encontró nada en la búsqueda.")
+        
+        # Si hay resultados, actualizar la tabla con los resultados únicos
+        self.actualizar_tabla_por_ids(ids_unicos)
 
     def actualizar_tabla_por_ids(self, ids):
         # Limpiar la tabla actual
@@ -227,8 +241,15 @@ class BuscarProductoView(QtWidgets.QWidget):
             boton_factura.setStyleSheet("color: blue; text-decoration: underline;")
             boton_factura.clicked.connect(lambda _, idx=datos[0]: self.abrir_pdf(idx, "factura"))
             self.tabla.setCellWidget(i, 6, boton_factura)
-            
+
     def borrar(self):
-        # Borrar el contenido de la barra de búsqueda y restablecer la tabla
         self.barra_busqueda.clear()
         self.mostrar_datos_en_tabla()
+        self.barra_busqueda.setFocus()
+    
+    def set_controller(self, controller):
+        self.controller = controller
+    
+    def volver_opciones(self):
+        self.close()
+        self.controller.mostrar_opciones()
