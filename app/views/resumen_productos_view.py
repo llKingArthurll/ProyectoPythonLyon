@@ -1,6 +1,9 @@
 import os
 import shutil
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QMessageBox, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import (
+    QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QMessageBox,
+    QTableWidget, QTableWidgetItem, QHeaderView
+)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from app.data.data_manager import DataManager
@@ -42,6 +45,7 @@ class ResumenProductoView(QDialog):
         layout.addWidget(QLabel(f"Cantidad de Productos: {cantidad_productos}"))
         layout.setAlignment(Qt.AlignCenter)
         
+        
         # Mostrar los productos ingresados con sus series
         if productos:
             table = QTableWidget()
@@ -56,41 +60,28 @@ class ResumenProductoView(QDialog):
                 table.setItem(idx, 0, QTableWidgetItem(f"Producto {idx + 1}"))
                 table.setItem(idx, 1, QTableWidgetItem(nombre_producto))
                 table.setItem(idx, 2, QTableWidgetItem(", ".join(series)))
-                
 
-            layout.addWidget(table)
+            # Configurar la tabla para que no sea editable
+            table.setEditTriggers(QTableWidget.NoEditTriggers)
+            table.setSelectionMode(QTableWidget.NoSelection)
+
+            # Estilo del encabezado de la tabla
+            header = table.horizontalHeader()
+            header.setStyleSheet("background-color: #333333; color: black;")
+            header.setSectionResizeMode(QHeaderView.Stretch)
+
+            # Estilo del cuerpo de la tabla
             table.setStyleSheet("""
                 QTableWidget {
-                    background-color: white;
-                    color: #333333;
-                    gridline-color: #CCCCCC;
                     border: 1px solid #CCCCCC;
-                    selection-background-color: #333333;
-                    selection-color: white;
                 }
                 QTableWidget::item {
                     padding: 5px;
-                    border-bottom: 1px solid #CCCCCC;
-                }
-                QTableWidget::item:focus {
-                    background-color: #FE6E0C;
-                }
-                QTableWidget::horizontalHeader {
-                    background-color: #333333;
-                    font-weight: bold;
-                }
-                QTableWidget::horizontalHeader:section {
-                    padding: 20px;
-                }
-                QTableWidget::verticalHeader {
-                    background-color: #333333;
-                    color: white;
-                    font-weight: bold;
-                }
-                QTableWidget::verticalHeader:section {
-                    padding: 5px;
                 }
             """)
+            
+            layout.addWidget(table)
+
         # Botones de continuar y cancelar
         botones_layout = QHBoxLayout()
         layout.addLayout(botones_layout)
@@ -107,9 +98,6 @@ class ResumenProductoView(QDialog):
                 margin: 10px;
                 border-radius: 5px;
             }
-            QPushButton:hover {
-                background-color: #FF7F50;
-            }
         """)   
 
         continuar_button = QPushButton("Continuar")
@@ -123,9 +111,6 @@ class ResumenProductoView(QDialog):
                 padding: 10px;
                 margin: 10px;
                 border-radius: 5px;
-            }
-            QPushButton:hover {
-                background-color: #FF7F50;
             }
         """)   
 
@@ -200,7 +185,7 @@ class ResumenProductoView(QDialog):
         
         self.guardar_datos_productos(id_nuevo_ingreso)
         
-        confirmacion = QMessageBox.information(
+        QMessageBox.information(
             self, 
             "Confirmación",
             "Se guardó satisfactoriamente en la base de datos.",
@@ -214,4 +199,3 @@ class ResumenProductoView(QDialog):
 
     def set_controller(self, controller):
         self.controller = controller
-        
