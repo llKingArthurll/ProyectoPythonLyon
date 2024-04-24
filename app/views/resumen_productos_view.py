@@ -54,8 +54,12 @@ class ResumenProductoView(QWidget):
                 series = ", ".join(producto['series'])
                 row_position = table.rowCount()
                 table.insertRow(row_position)
-                table.setItem(row_position, 0, QTableWidgetItem(nombre_producto))
-                table.setItem(row_position, 1, QTableWidgetItem(series))
+                item_nombre = QTableWidgetItem(nombre_producto)
+                item_nombre.setTextAlignment(Qt.AlignCenter)
+                table.setItem(row_position, 0, item_nombre)
+                item_series = QTableWidgetItem(series)
+                item_series.setTextAlignment(Qt.AlignCenter)
+                table.setItem(row_position, 1, item_series)
 
             table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
             table.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
@@ -94,11 +98,11 @@ class ResumenProductoView(QWidget):
             }
         """)   
 
-        continuar_button = QPushButton("Continuar")
-        continuar_button.setFixedWidth(150)
-        continuar_button.clicked.connect(self.continuar)
-        botones_layout.addWidget(continuar_button)
-        continuar_button.setStyleSheet("""
+        guardar_button = QPushButton("Guardar")
+        guardar_button.setFixedWidth(150)
+        guardar_button.clicked.connect(self.guardar)
+        botones_layout.addWidget(guardar_button)
+        guardar_button.setStyleSheet("""
             QPushButton {
                 background-color: #FE6E0C;
                 color: white;
@@ -161,7 +165,7 @@ class ResumenProductoView(QWidget):
         except Exception as e:
             QMessageBox.warning(self, "Error", f"Error al guardar los productos: {e}")
 
-    def continuar(self):
+    def guardar(self):
         nueva_ruta_guia, nueva_ruta_factura = self.mover_archivos()
         
         if nueva_ruta_guia is None or nueva_ruta_factura is None:
