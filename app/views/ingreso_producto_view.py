@@ -21,7 +21,7 @@ class IngresoProductoView(QWidget):
 
         title_label = QLabel("Ingresa los datos de los productos")
         title_label.setStyleSheet("font-size: 15pt; font-weight: bold;")
-        layout.addWidget(title_label)
+        layout.addWidget(title_label, alignment=Qt.AlignCenter)
 
         cantidad_productos = DataManager.get_instance().obtener_cantidad_productos()
         cantidad_productos = int(cantidad_productos)
@@ -56,14 +56,12 @@ class IngresoProductoView(QWidget):
             nombre_label = QLabel("Nombre del producto:")
             nombre_entry = QLineEdit()
             nombre_entry.setObjectName(f"nombre_entry_{i}")
-            nombre_entry.setFixedWidth(300)
             producto_layout.addWidget(nombre_label)
             producto_layout.addWidget(nombre_entry)
 
             serie_label = QLabel("Series del producto:")
             serie_entry = QLineEdit()
             serie_entry.setObjectName(f"serie_entry_{i}")
-            serie_entry.setFixedWidth(300)
             serie_entry.setDisabled(True)
             producto_layout.addWidget(serie_label)
             producto_layout.addWidget(serie_entry)
@@ -115,6 +113,7 @@ class IngresoProductoView(QWidget):
 
         cancelar_button = QPushButton("Cancelar")
         cancelar_button.clicked.connect(self.cancelar)
+        cancelar_button.setFixedWidth(200)
         botones_layout.addWidget(cancelar_button)
         cancelar_button.setStyleSheet("""
             QPushButton {
@@ -131,6 +130,7 @@ class IngresoProductoView(QWidget):
 
         continuar_button = QPushButton("Continuar")
         continuar_button.clicked.connect(self.continuar)
+        continuar_button.setFixedWidth(200)
         botones_layout.addWidget(continuar_button)
         continuar_button.setStyleSheet("""
             QPushButton {

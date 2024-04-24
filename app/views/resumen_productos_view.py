@@ -1,76 +1,71 @@
 import os
 import shutil
 from PyQt5.QtWidgets import (
-    QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QMessageBox,
-    QTableWidget, QTableWidgetItem, QHeaderView
+    QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QMessageBox,
+    QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit
 )
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from app.data.data_manager import DataManager
 from app.data.db_queries import DatabaseQueries
 
-class ResumenProductoView(QDialog):
+class ResumenProductoView(QWidget):
     def __init__(self, controller=None):
         super().__init__()
         self.controller = controller
         self.setWindowTitle("Resumen de Productos")
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
-        self.setFixedSize(800, 600)
-        
+        self.setFixedSize(600, 600)
         self.initUI()
 
     def initUI(self):
-        # Crear un layout vertical para justificar el contenido hacia la parte superior
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignTop)
         self.setLayout(layout)
 
-        # Título para el resumen
         resumen_label = QLabel("Resumen de lo ingresado")
         resumen_label.setAlignment(Qt.AlignCenter)
         resumen_label.setStyleSheet("font-size: 20pt; font-weight: bold;")
         layout.addWidget(resumen_label)
 
-        # Obtener los datos del DataManager
         numero_guia = DataManager.get_instance().obtener_numero_guia()
         nombre_empresa = DataManager.get_instance().obtener_nombre_empresa()
         fecha = DataManager.get_instance().obtener_fecha()
         cantidad_productos = DataManager.get_instance().obtener_cantidad_productos()
         productos = DataManager.get_instance().obtener_productos_con_series()
 
-        # Mostrar los datos generales
-        layout.addWidget(QLabel(f"Número de Guía: {numero_guia}"))
-        layout.addWidget(QLabel(f"Nombre de Empresa: {nombre_empresa}"))
-        layout.addWidget(QLabel(f"Fecha: {fecha}"))
-        layout.addWidget(QLabel(f"Cantidad de Productos: {cantidad_productos}"))
-        layout.setAlignment(Qt.AlignCenter)
-        
-        
-        # Mostrar los productos ingresados con sus series
+        for label_text, value_text in [("Número de Guía", numero_guia),
+                                       ("Nombre de Empresa", nombre_empresa),
+                                       ("Fecha", fecha),
+                                       ("Cantidad de Productos", cantidad_productos)]:
+            label = QLabel(label_text + ":")
+            line_edit = QLineEdit(value_text)
+            line_edit.setEnabled(False)
+            layout.addWidget(label)
+            layout.addWidget(line_edit)
+
         if productos:
             table = QTableWidget()
-            table.setRowCount(len(productos))
-            table.setColumnCount(3)
-            table.setHorizontalHeaderLabels(["Producto", "Nombre", "Series"])
+            table.setColumnCount(2)
+            table.setHorizontalHeaderLabels(["Nombre", "Series"])
 
-            for idx, producto in enumerate(productos):
+            for producto in productos:
                 nombre_producto = producto['nombre']
-                series = producto['series']
+                series = ", ".join(producto['series'])
+                row_position = table.rowCount()
+                table.insertRow(row_position)
+                table.setItem(row_position, 0, QTableWidgetItem(nombre_producto))
+                table.setItem(row_position, 1, QTableWidgetItem(series))
 
-                table.setItem(idx, 0, QTableWidgetItem(f"Producto {idx + 1}"))
-                table.setItem(idx, 1, QTableWidgetItem(nombre_producto))
-                table.setItem(idx, 2, QTableWidgetItem(", ".join(series)))
-
-            # Configurar la tabla para que no sea editable
+            table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+            table.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
             table.setEditTriggers(QTableWidget.NoEditTriggers)
             table.setSelectionMode(QTableWidget.NoSelection)
 
-            # Estilo del encabezado de la tabla
             header = table.horizontalHeader()
             header.setStyleSheet("background-color: #333333; color: black;")
             header.setSectionResizeMode(QHeaderView.Stretch)
 
-            # Estilo del cuerpo de la tabla
             table.setStyleSheet("""
                 QTableWidget {
                     border: 1px solid #CCCCCC;
@@ -82,7 +77,6 @@ class ResumenProductoView(QDialog):
             
             layout.addWidget(table)
 
-        # Botones de continuar y cancelar
         botones_layout = QHBoxLayout()
         layout.addLayout(botones_layout)
 
@@ -143,13 +137,11 @@ class ResumenProductoView(QDialog):
     def guardar_datos_ingreso(self, nueva_ruta_guia, nueva_ruta_factura):
         data_manager = DataManager.get_instance()
         
-        # Obtener los datos de ingreso
         numero_guia = data_manager.obtener_numero_guia()
         nombre_empresa = data_manager.obtener_nombre_empresa()
         fecha = data_manager.obtener_fecha()
         cantidad_productos = data_manager.obtener_cantidad_productos()
         
-        # Guardar los datos en la base de datos
         return DatabaseQueries.insertar_nuevo_ingreso(
             numero_guia=numero_guia,
             nombre_empresa=nombre_empresa,
@@ -162,11 +154,9 @@ class ResumenProductoView(QDialog):
     def guardar_datos_productos(self, id_nuevo_ingreso):
         data_manager = DataManager.get_instance()
         
-        # Obtener los productos con sus series
         productos = data_manager.obtener_productos_con_series()
         
         try:
-            # Guardar los productos en la base de datos
             DatabaseQueries.insertar_productos(id_nuevo_ingreso, productos)
         except Exception as e:
             QMessageBox.warning(self, "Error", f"Error al guardar los productos: {e}")

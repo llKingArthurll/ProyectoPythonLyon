@@ -1,0 +1,22 @@
+-- LyonSystem.db
+
+CREATE TABLE "NuevoIngreso" (
+	"id_nuevoingreso"	INTEGER NOT NULL UNIQUE,
+	"nombre_guia"	TEXT NOT NULL,
+	"nombre_empresa"	TEXT NOT NULL,
+	"cantidad_productos"	INTEGER NOT NULL,
+	"fecha_guia"	TEXT NOT NULL,
+	"save_data"	TEXT NOT NULL,
+	"path_guia"	TEXT NOT NULL,
+	"path_factura"	TEXT NOT NULL,
+	PRIMARY KEY("id_nuevoingreso" AUTOINCREMENT)
+);
+
+CREATE TABLE "Productos" (
+	"id_producto"	INTEGER NOT NULL UNIQUE,
+	"id_nuevoingreso"	INTEGER NOT NULL,
+	"nombre_producto"	TEXT NOT NULL,
+	"series_producto"	TEXT NOT NULL,
+	FOREIGN KEY("id_nuevoingreso") REFERENCES "NuevoIngreso"("id_nuevoingreso"),
+	PRIMARY KEY("id_producto" AUTOINCREMENT)
+);
