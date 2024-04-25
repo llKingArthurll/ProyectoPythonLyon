@@ -122,20 +122,32 @@ class IngresarNuevoView(QWidget):
         cancelar_button = QPushButton("Cancelar")
         cancelar_button.setFixedWidth(150)
         cancelar_button.setStyleSheet("""
-            background-color: #FE6E0C;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-        """)
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)   
         cancelar_button.clicked.connect(self.cancelar)
         aceptar_button = QPushButton("Continuar")
         aceptar_button.setFixedWidth(150)
         aceptar_button.setStyleSheet("""
-            background-color: #FE6E0C;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-        """)
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)   
         aceptar_button.clicked.connect(self.continuar_ingreso)
         
         # Añadir botones al layout
