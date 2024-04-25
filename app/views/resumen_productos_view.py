@@ -186,6 +186,9 @@ class ResumenProductoView(QWidget):
             QMessageBox.Ok
         )
         
+        data_manager = DataManager.get_instance()
+        data_manager.limpiar_datos()
+        
         self.close()
         
         if self.controller:

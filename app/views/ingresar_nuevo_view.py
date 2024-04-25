@@ -10,10 +10,12 @@ from app.data.data_manager import DataManager
 class IngresarNuevoView(QWidget):
     def __init__(self):
         super().__init__()
+        self.data_manager = DataManager.get_instance()
         self.setWindowTitle("Ingresando nueva guía")
         self.setWindowIcon(QIcon("resources/LogoLyon.ico"))
         self.showMaximized()
         self.initUI()
+        self.cargar_datos()
 
     def initUI(self):
         # Layout principal centrado horizontalmente
@@ -148,6 +150,17 @@ class IngresarNuevoView(QWidget):
         # Asignar el layout principal a la ventana
         self.setLayout(main_layout)
 
+    def validar_existencia_archivos(self, guia_filename, factura_filename):
+        guia_path = os.path.join("documents", "guia", guia_filename) if guia_filename else None
+        factura_path = os.path.join("documents", "factura", factura_filename) if factura_filename else None
+
+        if guia_filename and os.path.exists(guia_path):
+            return f"El archivo {guia_filename} ya se encontró en el sistema, intenta con otro"
+        elif factura_filename and os.path.exists(factura_path):
+            return f"El archivo {factura_filename} ya se encontró en el sistema, intenta con otro"
+        else:
+            return None
+
     def validar_ingreso(self):
         cantidad_texto = self.cantidad_productos_entry.text().strip()
 
@@ -159,22 +172,22 @@ class IngresarNuevoView(QWidget):
             not self.factura_file_label.text().strip() or
             not self.guia_file_label.text().strip()):
             QMessageBox.warning(self, "Error", "Llene todos los campos")
-            return
+            return False
 
         # Validar la fecha
         if self.fecha_picker.date().toPyDate() < QDate(2022, 1, 1).toPyDate():
             QMessageBox.warning(self, "Error", "Fecha ingresada incorrecta")
-            return
+            return False
 
         # Validar la cantidad de productos
         if not cantidad_texto.isdigit() or not (1 <= int(cantidad_texto) <= 99):
             QMessageBox.warning(self, "Error", "Ingrese un número correcto en la cantidad de productos")
-            return
+            return False
 
         # Validar si se han subido guía y factura
         if self.factura_file_label.text() == self.guia_file_label.text():
             QMessageBox.warning(self, "Error", "Guía y factura deben ser diferentes")
-            return
+            return False
 
         return True
 
@@ -183,7 +196,18 @@ class IngresarNuevoView(QWidget):
         if not self.validar_ingreso():
             return
 
-        # Guardar datos en DataManager
+        # Obtener nombres de archivos
+        guia_filename = os.path.basename(self.guia_filename) if hasattr(self, 'guia_filename') else None
+        factura_filename = os.path.basename(self.factura_filename) if hasattr(self, 'factura_filename') else None
+
+        # Validar existencia de archivos
+        error_message = self.validar_existencia_archivos(guia_filename, factura_filename)
+
+        if error_message:
+            QMessageBox.warning(self, "Error", error_message)
+            return
+
+        # Continuar con el proceso de ingreso
         data_manager = DataManager.get_instance()
         data_manager.guardar_datos_ingreso_nuevo(
             numero_guia=self.numero_guia_entry.text(),
@@ -215,4 +239,21 @@ class IngresarNuevoView(QWidget):
 
     def cancelar(self):
         self.close()
+        data_manager = DataManager.get_instance()
+        data_manager.limpiar_datos()
         self.controller.mostrar_opciones()
+        
+    def cargar_datos(self):
+        numero_guia = self.data_manager.obtener_numero_guia()
+        nombre_empresa = self.data_manager.obtener_nombre_empresa()
+        fecha = self.data_manager.obtener_fecha()
+        cantidad_productos = self.data_manager.obtener_cantidad_productos()
+
+        if numero_guia:
+            self.numero_guia_entry.setText(numero_guia)
+        if nombre_empresa:
+            self.nombre_empresa_entry.setText(nombre_empresa)
+        if fecha:
+            self.fecha_picker.setDate(QDate.fromString(fecha, "dd/MM/yyyy"))
+        if cantidad_productos:
+            self.cantidad_productos_entry.setText(cantidad_productos)
