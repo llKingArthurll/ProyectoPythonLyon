@@ -21,9 +21,8 @@ class OpcionesView(QWidget):
         self.label.setMargin(20)
 
         self.buscar_producto_button = QPushButton(self)
-        self.buscar_producto_button.setIcon(QIcon("resources/Busqueda.png"))
-        self.buscar_producto_button.setIconSize(QSize(100, 100))
-        self.buscar_producto_button.setText("BUSCAR PRODUCTO")
+        self.buscar_producto_button.setIcon(QIcon("resources/buscarLogo.png"))
+        self.buscar_producto_button.setIconSize(QSize(175, 175))
         self.buscar_producto_button.setFixedSize(300, 200)
         self.buscar_producto_button.clicked.connect(self.buscar_producto)
         self.buscar_producto_button.setStyleSheet("""
@@ -42,9 +41,8 @@ class OpcionesView(QWidget):
         """)
 
         self.ingresar_nuevo_button = QPushButton(self)
-        self.ingresar_nuevo_button.setIcon(QIcon("resources/IngresoGuia.png"))
-        self.ingresar_nuevo_button.setIconSize(QSize(100, 100))
-        self.ingresar_nuevo_button.setText("INGRESAR NUEVO")
+        self.ingresar_nuevo_button.setIcon(QIcon("resources/ingresarLogo.png"))
+        self.ingresar_nuevo_button.setIconSize(QSize(175, 175))
         self.ingresar_nuevo_button.setFixedSize(300, 200)
         self.ingresar_nuevo_button.clicked.connect(self.ingresar_nuevo)
         self.ingresar_nuevo_button.setStyleSheet("""
@@ -63,16 +61,17 @@ class OpcionesView(QWidget):
         """)
         
         
-        self.cerrar_button = QPushButton("Salir", self)
-        self.cerrar_button.setIcon(QIcon("resources/IngresoGuia.png"))
-        self.cerrar_button.setFixedWidth(150)
+        self.cerrar_button = QPushButton(self)
+        self.cerrar_button.setIcon(QIcon("resources/salirLogo.png"))
+        self.cerrar_button.setIconSize(QSize(150, 150))
+        self.cerrar_button.setFixedSize(200, 200)
         self.cerrar_button.clicked.connect(self.salir)
         self.cerrar_button.setStyleSheet("""
             QPushButton {
                 background-color: #FE6E0C;
                 color: white;
                 padding: 10px;
-                border-radius: 5px;
+                border-radius: 10px;
                 margin-top: 50px;
                 margin-left: 20px;
                 margin-right: 20px;
