@@ -61,8 +61,10 @@ class OpcionesView(QWidget):
                 background-color: #FF7F50;
             }
         """)
-
+        
+        
         self.cerrar_button = QPushButton("Salir", self)
+        self.cerrar_button.setIcon(QIcon("resources/IngresoGuia.png"))
         self.cerrar_button.setFixedWidth(150)
         self.cerrar_button.clicked.connect(self.salir)
         self.cerrar_button.setStyleSheet("""
