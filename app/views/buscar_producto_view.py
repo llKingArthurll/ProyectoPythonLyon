@@ -39,14 +39,14 @@ class BuscarProductoView(QtWidgets.QWidget):
         boton_buscar.clicked.connect(self.busqueda_especifica)
         boton_buscar.setStyleSheet("""
             QPushButton {
-                background-color: #215B6F;
+                background-color: #FE6E0C;
                 color: white;
                 padding: 10px;
                 margin: 10px;
                 border-radius: 5px;
             }
             QPushButton:hover {
-                background-color: #1358ab;
+                background-color: #FF7F50;
             }
         """)   
 
@@ -61,14 +61,14 @@ class BuscarProductoView(QtWidgets.QWidget):
         boton_borrar.clicked.connect(self.borrar)
         boton_borrar.setStyleSheet("""
             QPushButton {
-                background-color: #215B6F;
+                background-color: #FE6E0C;
                 color: white;
                 padding: 10px;
                 margin: 10px;
                 border-radius: 5px;
             }
             QPushButton:hover {
-                background-color: #1358ab;
+                background-color: #FF7F50;
             }
         """)   
 
