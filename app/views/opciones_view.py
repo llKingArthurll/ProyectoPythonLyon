@@ -41,7 +41,7 @@ class OpcionesView(QWidget):
         """)
 
         self.ingresar_nuevo_button = QPushButton(self)
-        self.ingresar_nuevo_button.setIcon(QIcon("resources/ingresarLogo.png"))
+        self.ingresar_nuevo_button.setIcon(QIcon("resources/IngresoGuia.png"))
         self.ingresar_nuevo_button.setIconSize(QSize(175, 175))
         self.ingresar_nuevo_button.setFixedSize(300, 200)
         self.ingresar_nuevo_button.clicked.connect(self.ingresar_nuevo)
@@ -62,9 +62,9 @@ class OpcionesView(QWidget):
         
         
         self.cerrar_button = QPushButton(self)
-        self.cerrar_button.setIcon(QIcon("resources/salirLogo.png"))
-        self.cerrar_button.setIconSize(QSize(150, 150))
-        self.cerrar_button.setFixedSize(200, 200)
+        self.cerrar_button.setIcon(QIcon("resources/SalirLogo.png"))
+        self.cerrar_button.setIconSize(QSize(80, 80))
+        self.cerrar_button.setFixedSize(180, 100)
         self.cerrar_button.clicked.connect(self.salir)
         self.cerrar_button.setStyleSheet("""
             QPushButton {
