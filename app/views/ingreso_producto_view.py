@@ -100,7 +100,7 @@ class IngresoProductoView(QWidget):
                 border-radius: 5px;
             }
             QPushButton:hover {
-                background-color: #FF7F50;
+                background-color: #1358ab;
             }
         """)   
 

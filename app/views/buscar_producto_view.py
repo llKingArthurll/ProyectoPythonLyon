@@ -38,11 +38,18 @@ class BuscarProductoView(QtWidgets.QWidget):
         boton_buscar.setFixedWidth(150)
         boton_buscar.clicked.connect(self.busqueda_especifica)
         boton_buscar.setStyleSheet("""
-            background-color: #FE6E0C;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-        """)
+            QPushButton {
+                background-color: #215B6F;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #1358ab;
+            }
+        """)   
+
         layout_busqueda.addWidget(boton_buscar)
         
         # Asignar la acción de búsqueda a la tecla Enter en la barra de búsqueda
@@ -53,11 +60,18 @@ class BuscarProductoView(QtWidgets.QWidget):
         boton_borrar.setFixedWidth(150)
         boton_borrar.clicked.connect(self.borrar)
         boton_borrar.setStyleSheet("""
-            background-color: #FE6E0C;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-        """)
+            QPushButton {
+                background-color: #215B6F;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #1358ab;
+            }
+        """)   
+
         layout_busqueda.addWidget(boton_borrar)
 
         # Añadir el layout de búsqueda al layout principal
@@ -88,11 +102,17 @@ class BuscarProductoView(QtWidgets.QWidget):
         boton_volver.setFixedWidth(150)
         boton_volver.clicked.connect(self.volver_opciones)  # Conecta la función a ejecutar al hacer clic
         boton_volver.setStyleSheet("""
-            background-color: #FE6E0C;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-        """)
+            QPushButton {
+                background-color: #FE6E0C;
+                color: white;
+                padding: 10px;
+                margin: 10px;
+                border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
+        """)   
         layout_volver.addWidget(boton_volver)
         layout_principal.addLayout(layout_volver)
 
@@ -116,12 +136,12 @@ class BuscarProductoView(QtWidgets.QWidget):
 
             # Crear botones para ver Guía y Factura
             boton_guia = QtWidgets.QPushButton("Ver Guía")
-            boton_guia.setStyleSheet("color: blue; text-decoration: underline;")
+            boton_guia.setStyleSheet("color: black;")
             boton_guia.clicked.connect(lambda _, idx=registro[0]: self.abrir_pdf(idx, "guia"))
             self.tabla.setCellWidget(i, 5, boton_guia)
             
             boton_factura = QtWidgets.QPushButton("Ver Factura")
-            boton_factura.setStyleSheet("color: blue; text-decoration: underline;")
+            boton_factura.setStyleSheet("color: black;")
             boton_factura.clicked.connect(lambda _, idx=registro[0]: self.abrir_pdf(idx, "factura"))
             self.tabla.setCellWidget(i, 6, boton_factura)
 
@@ -233,12 +253,12 @@ class BuscarProductoView(QtWidgets.QWidget):
 
             # Crear botones para ver Guía y Factura
             boton_guia = QtWidgets.QPushButton("Ver Guía")
-            boton_guia.setStyleSheet("color: blue; text-decoration: underline;")
+            boton_guia.setStyleSheet("color: black;")
             boton_guia.clicked.connect(lambda _, idx=datos[0]: self.abrir_pdf(idx, "guia"))
             self.tabla.setCellWidget(i, 5, boton_guia)
             
             boton_factura = QtWidgets.QPushButton("Ver Factura")
-            boton_factura.setStyleSheet("color: blue; text-decoration: underline;")
+            boton_factura.setStyleSheet("color: black;")
             boton_factura.clicked.connect(lambda _, idx=datos[0]: self.abrir_pdf(idx, "factura"))
             self.tabla.setCellWidget(i, 6, boton_factura)
 

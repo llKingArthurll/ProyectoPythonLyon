@@ -96,6 +96,9 @@ class ResumenProductoView(QWidget):
                 margin: 10px;
                 border-radius: 5px;
             }
+            QPushButton:hover {
+                background-color: #FF7F50;
+            }
         """)   
 
         guardar_button = QPushButton("Guardar")
@@ -109,6 +112,9 @@ class ResumenProductoView(QWidget):
                 padding: 10px;
                 margin: 10px;
                 border-radius: 5px;
+            }
+            QPushButton:hover {
+                background-color: #FF7F50;
             }
         """)   
 
