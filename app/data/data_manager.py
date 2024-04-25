@@ -11,7 +11,6 @@ class DataManager:
         if not self._initialized:
             self._initialized = True
             self.data = {}
-            # Inicializar una lista para almacenar los productos con sus series
             self.productos_con_series = []
 
     def guardar_datos_ingreso_nuevo(self, numero_guia, nombre_empresa, fecha, cantidad_productos, ruta_guia, ruta_factura):
@@ -41,18 +40,14 @@ class DataManager:
         return self.data.get('ruta_factura')
 
     def guardar_datos_productos(self, datos_productos):
-        """
-        Guarda los datos de los productos con sus series.
-        datos_productos debe ser una lista de diccionarios donde cada diccionario representa un producto
-        con su nombre y una lista de sus series.
-        """
         self.productos_con_series = datos_productos
 
     def obtener_productos_con_series(self):
-        """
-        Devuelve la lista de diccionarios con los productos y sus series.
-        """
         return self.productos_con_series
+    
+    def limpiar_datos(self):
+        self.data = {}
+        self.productos_con_series = []
 
     @classmethod
     def get_instance(cls):
